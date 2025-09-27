@@ -6,28 +6,30 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import useAuthStore from "@/store/authStore";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const menuItems = [
   {
     title: "Riki",
     link: "/riki",
     submenu: [
-      { title: "N1", link: "/riki/n1" },
-      { title: "N2", link: "/riki/n2" },
-      { title: "N3", link: "/riki/n3" },
-      { title: "N4", link: "/riki/n4" },
-      { title: "N5", link: "/riki/n5" },
+      { title: "N1", link: "/courses/riki/n1" },
+      { title: "N2", link: "/courses/riki/n2" },
+      { title: "N3", link: "/courses/riki/n3" },
+      { title: "N4", link: "/courses/riki/n4" },
+      { title: "N5", link: "/courses/riki/n5" },
     ],
   },
   {
     title: "Dũng Mori",
     link: "/dungmori",
     submenu: [
-      { title: "N1", link: "/dungmori/n1" },
-      { title: "N2", link: "/dungmori/n2" },
-      { title: "N3", link: "/dungmori/n3" },
-      { title: "N4", link: "/dungmori/n4" },
-      { title: "N5", link: "/dungmori/n5" },
+      { title: "N1", link: "/courses/dungmori/n1" },
+      { title: "N2", link: "/courses/dungmori/n2" },
+      { title: "N3", link: "/courses/dungmori/n3" },
+      { title: "N4", link: "/courses/dungmori/n4" },
+      { title: "N5", link: "/courses/dungmori/n5" },
     ],
   },
   {
@@ -119,7 +121,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
             {item.link ? (
               item.external ? (
                 <Link
-                  href={item.link}
+                  href={`/courses/${item.link}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-bold transition-colors hover:text-cyan-500"
@@ -128,7 +130,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
                 </Link>
               ) : (
                 <Link
-                  href={item.link}
+                  href={`/courses/${item.link}`}
                   className="font-bold transition-colors hover:text-cyan-500"
                 >
                   {item.title}
@@ -144,7 +146,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
           {/* Submenu1 */}
           {item.submenu && !isSubmenu && hoveredIndex === index && (
             <div
-              className={`absolute left-0 top-full bg-white shadow-lg rounded-xl pt-5 py-2 z-10 min-w-[200px] animate-slide-up `}
+              className={`slide-up absolute left-0 top-full bg-white shadow-lg rounded-xl pt-5 py-2 z-10 min-w-[200px] animate-slide-up `}
             >
               <ul>
                 {item.submenu.map((subItem, subIndex) => (
@@ -187,7 +189,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
                     {/* Submenu2: Luôn render, chỉ ẩn/hiện bằng CSS và state */}
                     {subItem.submenu && hoveredSubIndex === subIndex && (
                       <div
-                        className={`pl-2.5 left-full absolute min-w-[200px] top-0`}
+                        className={`slide-up pl-2.5 left-full absolute min-w-[200px] top-0`}
                       >
                         <ul className="z-10 py-2 bg-white shadow-lg rounded-xl">
                           {subItem.submenu.map((subItem2, subIndex2) => (
@@ -302,9 +304,10 @@ const RenderMobileMenu = ({ items }) => {
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = useAuthStore((state) => state.user);
 
   return (
-    <header className="relative flex items-center justify-center p-2 bg-white shadow-md  text-[#343A40]">
+    <header className="sticky top-0 z-50 flex items-center justify-center px-2 py-0 bg-white shadow-md  text-[#343A40]">
       <div className="container flex items-center justify-between mx-0 md:mx-15">
         {/* btn mobile menu */}
         <div className="flex items-center space-x-4 md:hidden">
@@ -354,6 +357,7 @@ const Header = () => {
               width={100}
               height={30}
               priority
+              style={{ width: "auto" }}
             />
           </Link>
         </div>
@@ -362,12 +366,26 @@ const Header = () => {
         <nav className="hidden md:block">
           <RenderDesktopMenu items={menuItems} />
         </nav>
-        <Link
-          href="/login"
-          className="px-4 py-2 font-bold text-white transition-colors rounded-full bg-cyan-500 hover:bg-cyan-600"
-        >
-          Đăng Nhập
-        </Link>
+        {user ? (
+          <Link href={`/profile/${user.id}`} className="">
+            <div className="flex">
+              <Avatar className="w-10 h-10 mr-2 md:w-12 md:h-12">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback> {user.name}</AvatarFallback>
+              </Avatar>
+            </div>
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            className="px-4 py-2 font-bold text-white transition-colors rounded-full bg-cyan-500 hover:bg-cyan-600"
+          >
+            Đăng Nhập
+          </Link>
+        )}
         {/* Mobile Menu Button */}
       </div>
 

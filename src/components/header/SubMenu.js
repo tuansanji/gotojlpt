@@ -5,8 +5,8 @@ import Link from "next/link";
 const Submenu = ({ items, isSubmenu = false }) => {
   return (
     <ul
-      className={`bg-white shadow-lg rounded-xl py-2 z-10 min-w-[200px] ${
-        isSubmenu ? "absolute left-full top-0 ml-4" : ""
+      className={`slide-up bg-white shadow-lg rounded-xl py-2 z-10 min-w-[200px] ${
+        isSubmenu ? "slide-up absolute left-full top-0 ml-4" : ""
       }`}
     >
       {items.map((item, index) => (
