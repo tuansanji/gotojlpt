@@ -1,7 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "daisyui";
+
 @layer utilities {
+  div {
+    background-color: important red;
+  }
   .bg-bg-form {
     background-image: url("/bg-form.png");
     background-attachment: fixed;

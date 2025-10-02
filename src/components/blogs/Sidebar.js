@@ -8,8 +8,34 @@ const Sidebar = ({ categories, popularPosts }) => {
     <aside className="space-y-8">
       {/* Phần Danh mục */}
       <div className="p-6 bg-white shadow-sm rounded-xl">
-        <h3 className="mb-4 text-lg font-bold text-gray-800">Danh mục</h3>
-        <ul className="space-y-2">
+        <div className="course-box">
+          <div className="border-l-4 border-blue-600 p-4 my-6 bg-gray-50 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold text-blue-600 mb-2 pb-1 border-b border-dashed border-gray-300">
+              Khóa học Dũng Mori & Riki: Lộ trình JLPT toàn diện
+            </h2>
+            <p className="text-gray-700 leading-relaxed">
+              <strong className="text-red-500">Dũng Mori</strong> và
+              <strong className="text-red-500"> Riki Nihongo</strong> cung cấp
+              các khóa học tiếng Nhật
+              <strong className="text-red-500"> từ N5 đến N1</strong> dưới hình
+              thức
+              <strong className="text-red-500"> online</strong> tiện lợi. Cả hai
+              đều tập trung vào việc luyện thi chứng chỉ
+              <strong className="text-red-500"> JLPT</strong> với lộ trình học
+              đầy đủ các kỹ năng:
+              <strong className="text-red-500 ml-0.5  ">
+                Từ vựng, Kanji, Ngữ pháp, Đọc hiểu
+              </strong>{" "}
+              và
+              <strong className="text-red-500"> Nghe hiểu</strong>. Các khóa học
+              chuyên sâu như
+              <strong className="text-red-500"> Luyện đề</strong> hoặc rèn luyện
+              kỹ năng chuyên biệt cũng được cung cấp, giúp học viên dễ dàng
+              chinh phục mục tiêu JLPT của mình.
+            </p>
+          </div>
+        </div>
+        {/* <ul className="space-y-2">
           {categories.map((category, index) => (
             <li key={index}>
               <Link href={`/blog/category/${category.slug}`}>
@@ -19,7 +45,7 @@ const Sidebar = ({ categories, popularPosts }) => {
               </Link>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
 
       {/* Phần Bài viết nổi bật */}

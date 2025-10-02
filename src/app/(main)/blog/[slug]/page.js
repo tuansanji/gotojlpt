@@ -9,10 +9,16 @@ import { blogPosts } from "@/data/courses";
 // Dữ liệu giả định cho sidebar
 const popularPosts = [
   {
-    slug: "popular-1",
-    title: "5 mẹo luyện nghe JLPT N3 cực kỳ hiệu quả",
-    image: "/exams/blog.png",
-    date: "10/10/2025",
+    slug: "ung-dung-hoc-tieng-nhat",
+    title: "5 ứng dụng miễn phí giúp bạn học tiếng Nhật mỗi ngày",
+    image: "/blogs/5.jpg",
+    date: "10/03/2025",
+  },
+  {
+    slug: "vi-sao-nen-thi-jlpt-du-khong-di-du-hoc",
+    title: "Vì Sao Nên Thi JLPT Dù Không Đi Du Học?",
+    image: "/blogs/4.jpg",
+    date: "05/02/2025",
   },
 ];
 

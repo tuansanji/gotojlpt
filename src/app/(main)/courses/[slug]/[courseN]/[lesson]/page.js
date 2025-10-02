@@ -1,79 +1,31 @@
-"use client";
+// "use client";
 
-import React, { useState } from "react";
-
-import VideoPlayer from "./ReactPlayer";
-import LessonMenuModule from "./LessonMenu";
 import useCourseStore from "@/store/courseStore";
+import CourseSidebar from "./CourseSidebar";
+import CourseSidebarAdmin from "./CourseSidebar1";
+import VideoPlayer from "./ReactPlayer";
 
-function LessonPage() {
-  const [urlVideo, setUrlVideo] = useState("");
-
+export default function CoursePage() {
   const courses = useCourseStore((state) => state.courses);
-  const lesson = useCourseStore((state) => state.lesson);
-
-  const [openModuleIndex, setOpenModuleIndex] = useState(null);
-
-  let globalModuleIndex = 0;
-  // Trong component cha
-  const toggleModule = (index) => {
-    setOpenModuleIndex(openModuleIndex === index ? null : index);
-  };
+  const assetCurrent = useCourseStore((state) => state.assetCurrent);
 
   return (
-    <div className="flex">
-      {/* KHỐI CHÍNH BÊN TRÁI (Trình phát video và nội dung) */}
-      <div className="flex-1 p-4 max-h-[100vh]">
-        {/* Phần thêm trình phát video */}
-        <div className="overflow-hidden bg-black rounded-xl">
-          <VideoPlayer videoUrl={urlVideo} />
+    <div className="min-h-screen p-8 bg-gray-100">
+      <div className="flex gap-6 mx-auto max-w-7xl items-start">
+        <main className="w-[700px] flex-shrink-0">
+          <div className="bg-white rounded-lg shadow-xl mb-6">
+            <VideoPlayer videoUrl={assetCurrent?.id || ""} />
+          </div>
+
+          <div className="p-4 bg-teal-100 rounded-lg flex justify-between items-center">
+            <p className="font-bold text-lg">{assetCurrent?.title}</p>
+          </div>
+        </main>
+
+        <div className="flex-grow h-[calc(100vh-4rem)] sticky top-8 overflow-y-auto bg-white rounded-lg shadow-xl p-4">
+          <CourseSidebar rawData={courses} />
         </div>
-
-        {/* Nội dung khóa học (Description, etc.) */}
-        <div className="p-4 mt-4 bg-white shadow-md rounded-xl">
-          <h2 className="text-2xl font-bold">Tiêu đề khóa học</h2>
-          <p className="mt-2 text-gray-600">Mô tả chi tiết...</p>
-        </div>
-      </div>
-
-      {/* KHỐI BÊN PHẢI (Menu bài học) */}
-
-      <div className="p-4 mt-2 space-y-4 bg-white w-96 rounded-xl max-h-[90%] overflow-y-auto">
-        {/* Lặp qua các stages đã lọc */}
-        {courses && courses.stages && courses.stages[lesson.lessonCurrent] && (
-          <>
-            {courses.stages[lesson.lessonCurrent].sections.map(
-              (stage, index) => (
-                <div key={index}>
-                  <h4 className="text-lg font-semibold text-gray-800">
-                    {stage.title}
-                  </h4>
-                  {stage.lessons.map((module, moduleIndex) => {
-                    // Lấy chỉ mục duy nhất hiện tại
-                    const currentGlobalIndex = globalModuleIndex;
-
-                    // Tăng chỉ mục cho lần lặp tiếp theo
-                    globalModuleIndex++;
-                    return (
-                      <LessonMenuModule
-                        key={currentGlobalIndex}
-                        index={currentGlobalIndex}
-                        module={module}
-                        openModuleIndex={openModuleIndex} // state từ cha
-                        toggleModule={toggleModule} // hàm từ cha
-                        isLessonPage
-                        setUrlVideo={setUrlVideo}
-                      />
-                    );
-                  })}
-                </div>
-              )
-            )}
-          </>
-        )}
       </div>
     </div>
   );
 }
-
-export default LessonPage;

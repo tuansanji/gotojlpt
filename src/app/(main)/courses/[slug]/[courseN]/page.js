@@ -8,6 +8,7 @@ import { getCourses } from "@/services/courseService";
 import useStatusStore from "@/store/statusStore";
 import { setIdCourse } from "@/lib/setIdCourse";
 import { toast } from "sonner";
+import CoursePage from "./[lesson]/page";
 
 const CourseContent = ({ params }) => {
   const resolvedParams = React.use(params);
@@ -47,7 +48,7 @@ const CourseContent = ({ params }) => {
   return (
     <div className="p-6 bg-white shadow-md rounded-xl">
       {/* Thông tin tổng quan */}
-      <div className="mb-6 text-gray-600">
+      {/* <div className="mb-6 text-gray-600">
         <h1 className="mb-2 text-2xl font-bold text-red-600">
           Đây là trang khóa học {courseN} của {slug}
         </h1>
@@ -56,8 +57,10 @@ const CourseContent = ({ params }) => {
           {infoCourse.totalChapters} Chương • {infoCourse.totalVideos} videos
           bài giảng • {infoCourse.totalHours} giờ {infoCourse.totalMinutes} phút
         </p>
-      </div>
-      <CourseMenu courses={courses} />
+      </div> */}
+      {/* <CourseMenu courses={courses} /> */}
+
+      <CoursePage />
     </div>
   );
 };

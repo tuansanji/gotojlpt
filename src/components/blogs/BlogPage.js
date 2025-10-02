@@ -7,44 +7,60 @@ import Sidebar from "./Sidebar";
 // Dữ liệu giả định
 const posts = [
   {
-    slug: "bai-viet-1",
-    title: "Khám phá văn hóa Nhật Bản qua ẩm thực độc đáo",
-    excerpt:
-      "Tìm hiểu về các món ăn truyền thống và hiện đại, từ sushi, ramen đến các món tráng miệng tinh tế.",
-    image: "/exams/blog.png",
-    tags: ["Văn hóa", "Ẩm thực"],
+    slug: "hoc-tieng-nhat-bat-dau-tu-dau",
+    title: "Học Tiếng Nhật Bắt Đầu Từ Đâu?",
+    excerpt: `Khi mới học tiếng Nhật, nhiều bạn thường bị “ngợp” bởi bảng chữ cái, ngữ pháp phức tạp và lượng từ vựng khổng lồ. Thực ra, để đi đúng hướng bạn chỉ cần:
+Bắt đầu với Hiragana – Katakana thật chắc.
+Học 300–500 từ vựng cơ bản trong đời sống.
+Làm quen ngữ pháp sơ cấp N5 với các mẫu câu đơn giản.
+👉 Lời khuyên: học ít nhưng đều đặn mỗi ngày 30 phút sẽ hiệu quả hơn “học dồn” rồi bỏ giữa chừng.`,
+    image: "/blogs/1.png",
+    tags: ["Kinh nghiệm", "Tiếng nhật "],
   },
   {
-    slug: "bai-viet-2",
-    title: "10 cách học từ vựng tiếng Nhật hiệu quả cho người mới bắt đầu",
-    excerpt:
-      "Bài viết này sẽ chia sẻ những bí quyết giúp bạn học từ vựng một cách nhanh chóng và ghi nhớ lâu hơn.",
-    image: "/exams/blog.png",
+    slug: "bi-quyet-tu-hoc-jlpt-n3",
+    title: "Bí quyết tự học JLPT N3 hiệu quả và bền vững",
+    excerpt: `JLPT N3 là cột mốc nhiều bạn hướng tới khi chuẩn bị đi du học hoặc xin việc. Muốn đỗ N3, bạn cần:
+
+Ngữ pháp: học theo sách Shinkanzen Master hoặc Soumatome.
+
+Từ vựng + Kanji: ôn theo flashcard Anki hoặc Quizlet.
+
+Nghe hiểu: luyện nghe tin tức NHK Easy hoặc podcast Nhật ngắn.
+
+Làm đề: luyện ít nhất 5 đề mô phỏng (mock test) trước ngày thi.
+👉 Tip: dành thời gian nhiều hơn cho phần nghe, vì đây là phần “ăn điểm” dễ nhất.`,
+    image: "/blogs/2.png",
     tags: ["Học tập", "Kinh nghiệm"],
   },
   {
-    slug: "bai-viet-3",
-    title: "Những địa điểm du lịch tuyệt vời ở Kyoto vào mùa thu",
-    excerpt:
-      "Cùng khám phá những ngôi đền cổ kính, những con đường rợp lá vàng và đỏ khi đến Kyoto.",
-    image: "/exams/blog.png",
+    slug: "du-hoc-nhat-ban-chuan-bi-gi",
+    title: "Du học Nhật Bản: Cần chuẩn bị những gì?",
+    excerpt: `Đi du học không chỉ là học ngôn ngữ mà còn là chuẩn bị kỹ càng về tinh thần và tài chính.
+
+Tiếng Nhật: ít nhất N4, nếu có N3 càng tốt.
+
+Giấy tờ: hộ chiếu, hồ sơ cá nhân, chứng minh tài chính.
+
+Kỹ năng sống: nấu ăn, quản lý chi tiêu, tự lập.
+👉 Đặc biệt: hãy tìm hiểu trước văn hóa Nhật Bản để tránh “sốc văn hóa”.`,
+    image: "/blogs/3.png",
     tags: ["Du lịch", "Kyoto"],
   },
-  // Thêm các bài viết khác
 ];
 
 const popularPosts = [
   {
-    slug: "popular-1",
-    title: "5 mẹo luyện nghe JLPT N3 cực kỳ hiệu quả",
-    image: "/exams/blog.png",
-    date: "10/10/2025",
+    slug: "ung-dung-hoc-tieng-nhat",
+    title: "5 ứng dụng miễn phí giúp bạn học tiếng Nhật mỗi ngày",
+    image: "/blogs/5.jpg",
+    date: "10/03/2025",
   },
   {
-    slug: "popular-2",
-    title: "Lộ trình học tiếng Nhật từ N5 lên N2 chỉ trong 1 năm",
-    image: "/exams/blog.png",
-    date: "05/10/2025",
+    slug: "vi-sao-nen-thi-jlpt-du-khong-di-du-hoc",
+    title: "Vì Sao Nên Thi JLPT Dù Không Đi Du Học?",
+    image: "/blogs/4.jpg",
+    date: "05/02/2025",
   },
 ];
 
@@ -71,7 +87,7 @@ export default function BlogPage() {
           </div>
 
           {/* Cột sidebar */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 ">
             <Sidebar categories={categories} popularPosts={popularPosts} />
           </div>
         </div>

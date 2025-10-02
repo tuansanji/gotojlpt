@@ -72,7 +72,7 @@ const CourseCard = ({ course }) => {
 
           {/* Các nút cấp độ */}
           <div className="flex justify-center mt-6 space-x-4 md:justify-start">
-            {course.levels.map((level, index) => (
+            {course.level.map((level, index) => (
               <span
                 key={index}
                 className="px-4 py-2 font-semibold text-gray-700 transition-colors duration-200 border border-gray-400 rounded-full cursor-pointer hover:bg-gray-100"

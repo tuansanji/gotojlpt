@@ -3,8 +3,9 @@ import Footer from "@/components/footer/footer";
 import Header from "@/components/header/Header";
 import ExamCard from "./exams/examCard";
 import BlogPage from "@/components/blogs/BlogPage";
-import "@/app/globals.css";
+
 import PromoBanner from "@/components/header/Banner";
+import CourseList from "@/components/courseMenu/CourseList";
 
 export default function MainLayout({ children }) {
   const businessContent = {
@@ -118,8 +119,9 @@ export default function MainLayout({ children }) {
   };
   return (
     <>
-      <BusinessSection content={businessContent} order={1} />
-      <BusinessSection content={businessContent2} />
+      <CourseList />
+      {/* <BusinessSection content={businessContent} order={1} />
+      <BusinessSection content={businessContent2} /> */}
       <ExamCard course={courseData} />
       <ExamCard course={courseData} />
       <BlogPage />

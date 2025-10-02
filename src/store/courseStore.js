@@ -5,11 +5,13 @@ const useCourseStore = create(
   persist(
     (set) => ({
       courses: null,
+      assetCurrent: null,
       lesson: {
         lessonCurrent: null,
       },
 
       setCourses: (courseData) => set({ courses: courseData }),
+      setAssetCurrent: (assetData) => set({ assetCurrent: assetData }),
 
       setLesson: (data) =>
         set((state) => ({
