@@ -21,6 +21,7 @@ const VideoPlayer = ({ videoUrl }) => {
         controls={true}
         width="100%"
         height="100%"
+        playing={videoUrl ? true : false}
         className="absolute top-0 left-0"
         config={{
           // Cấu hình cho file video thông thường (cần thiết nếu stream thất bại)

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-// Giả định lucide-react đã được cài đặt và hoạt động
 import {
   ChevronDown,
   ChevronRight,
@@ -13,17 +12,12 @@ import {
   ClipboardList,
   CheckCircle,
   ChevronUp,
-  MonitorPlay,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion"; // <-- Import Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
 import useCourseStore from "@/store/courseStore";
 
-// ----------------------------------------------------------------------
-// 🚨 ĐIỀU CHỈNH CỐT LÕI Ở ĐÂY: DÙNG ID CỦA ASSET BẠN MUỐN MỞ MẶC ĐỊNH
-// ----------------------------------------------------------------------
-const TARGET_ASSET_ID = 22;
-const isItemActive = (itemId) => itemId === TARGET_ASSET_ID;
-// ----------------------------------------------------------------------
+// Tên key dùng để lưu ID bài học đã xem cuối cùng trong Local Storage
+const LAST_VIEWED_KEY = "last_viewed_asset_id";
 
 // Variants cho animation đóng/mở Accordion
 const collapseVariants = {
@@ -39,9 +33,20 @@ const collapseVariants = {
   },
 };
 
-// --- LOGIC CHUYỂN ĐỔI DỮ LIỆU (Giữ nguyên cấu trúc Active) ---
+// ----------------------------------------------------------------------
+// --- HÀM TÌM KIẾM VÀ ÁNH XẠ DỮ LIỆU ---
+// ----------------------------------------------------------------------
 
-const mapAssetsToItems = (assets) => {
+// Hàm tìm ID của Asset đầu tiên trong cấu trúc dữ liệu
+const findFirstAssetId = (stages) => {
+  if (!stages || stages.length === 0) return null;
+
+  const firstAsset = stages[0].sections?.[0]?.lessons?.[0]?.assets?.[0];
+  return firstAsset?.id || null;
+};
+
+// Hàm ánh xạ Assets (Cấp 4)
+const mapAssetsToItems = (assets, isItemActive) => {
   return assets.map((asset) => {
     let icon;
     if (asset.url_video) {
@@ -72,10 +77,12 @@ const mapAssetsToItems = (assets) => {
   });
 };
 
-const mapLessonsToModules = (lessons) => {
+// Hàm ánh xạ Lessons (Cấp 3)
+const mapLessonsToModules = (lessons, isItemActive) => {
   return lessons.map((lesson) => {
-    const items = mapAssetsToItems(lesson.assets || []);
+    const items = mapAssetsToItems(lesson.assets || [], isItemActive);
     const isActive = items.some((item) => item.isActive);
+
     return {
       id: lesson.id,
       title: lesson.title,
@@ -85,10 +92,12 @@ const mapLessonsToModules = (lessons) => {
   });
 };
 
-const mapSectionsToTopics = (sections) => {
+// Hàm ánh xạ Sections (Cấp 2)
+const mapSectionsToTopics = (sections, isItemActive) => {
   return sections.map((section) => {
-    const modules = mapLessonsToModules(section.lessons || []);
+    const modules = mapLessonsToModules(section.lessons || [], isItemActive);
     const isActive = modules.some((module) => module.isActive);
+
     return {
       id: section.id,
       title: section.title,
@@ -98,30 +107,65 @@ const mapSectionsToTopics = (sections) => {
   });
 };
 
-const mapStagesToTabs = (stages) => {
+// Hàm ánh xạ Stages (Cấp 1 - Tabs)
+const mapStagesToTabs = (stages, activeIdSource) => {
+  // 1. XÁC ĐỊNH ID BÀI HỌC CẦN ACTIVE
+  const isInitialVisit = activeIdSource === null;
+  let activeAssetId;
+
+  if (isInitialVisit) {
+    // Nếu là lần đầu, ta không muốn bất kỳ bài nào ACTIVE (màu xanh),
+    // ta chỉ cần ID của bài đầu tiên để có thể chạy các logic map khác
+    activeAssetId = findFirstAssetId(stages);
+  } else {
+    // Nếu có bài học cũ (hoặc người dùng click), dùng ID đó
+    activeAssetId = activeIdSource;
+  }
+
+  // 2. ĐỊNH NGHĨA HÀM IS ACTIVE
+  const isItemActive = (itemId) => {
+    // Nếu là lần đầu (không có bài học cũ), KHÔNG CÓ BÀI NÀO active.
+    if (isInitialVisit) return false;
+
+    // Ngược lại, chỉ bài có ID khớp mới active.
+    return itemId === activeAssetId;
+  };
+
+  // 3. Thực hiện ánh xạ
   return stages.map((stage) => {
-    const topics = mapSectionsToTopics(stage.sections || []);
+    const topics = mapSectionsToTopics(stage.sections || [], isItemActive);
+    const isActive = topics.some((t) => t.isActive);
+
     return {
       id: stage.id,
       name: stage.name,
       slug: stage.slug,
       topics: topics,
-      isActive: topics.some((t) => t.isActive),
+      isActive: isActive,
     };
   });
 };
 
+// ----------------------------------------------------------------------
 // --- CÁC HÀM COMPONENT ---
+// ----------------------------------------------------------------------
 
 // Component cấp độ 4: Asset/Item
 const AssetItem = ({ item }) => {
   const setAssetCurrent = useCourseStore((state) => state.setAssetCurrent);
+
+  const handleClick = () => {
+    const { icon, ...assetDataToStore } = item;
+    // CẬP NHẬT STATE GLOBAL VÀ LOCAL STORAGE
+    setAssetCurrent(assetDataToStore);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(LAST_VIEWED_KEY, item.id.toString());
+    }
+  };
+
   return (
     <div
-      onClick={() => {
-        const { icon, ...assetDataToStore } = item;
-        setAssetCurrent(assetDataToStore);
-      }}
+      onClick={handleClick}
       className={`flex items-center gap-2 py-2 text-sm transition-colors cursor-pointer w-full
              ${
                item.isActive
@@ -130,20 +174,16 @@ const AssetItem = ({ item }) => {
              }`}
       style={{ paddingLeft: "3rem" }}
     >
-      {/* BỌC ICON TRONG MỘT DIV ĐỂ ÁP DỤNG STYLE HÌNH TRÒN VIỀN */}
       <div
         className={`rounded-full p-1 border-2 bg-white flex-shrink-0 flex items-center justify-center ${
-          // Icon Active sẽ có màu xanh, Inactive có màu hồng/đỏ
           item.isActive
             ? "text-[#00839D] border-[#00839D]"
             : "text-red-400 border-red-400"
         }`}
       >
-        {/* Hiển thị icon Lock nếu bị khóa, nếu không hiển thị icon nội dung */}
         {item.isLocked ? (
           <Lock size={12} className="text-gray-400" />
         ) : (
-          // Sử dụng cloneElement để đảm bảo icon nhận được prop size=16
           React.cloneElement(item.icon, { size: 12 })
         )}
       </div>
@@ -159,7 +199,7 @@ const AssetItem = ({ item }) => {
   );
 };
 
-// Component cấp độ 3: Module
+// Component cấp độ 3: Module (Giữ nguyên)
 const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
   const isOpen = module.id === openModuleId;
   const isActive = module.isActive;
@@ -172,12 +212,12 @@ const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
     <div className="border-b border-gray-100 ">
       <button
         className={`w-full flex justify-between items-center py-3 text-sm font-semibold transition-colors 
-                        ${
-                          isActive
-                            ? "border-l-4 border-[#00839D] text-[#00839D]"
-                            : "border-l-4 border-transparent text-gray-700"
-                        }
-                        ${!isActive && "hover:bg-gray-100"}`}
+                         ${
+                           isActive
+                             ? "border-l-4 border-[#00839D] text-[#00839D]"
+                             : "border-l-4 border-transparent text-gray-700"
+                         }
+                         ${!isActive && "hover:bg-gray-100"}`}
         onClick={toggleOpen}
         style={{ paddingLeft: "1.5rem" }}
       >
@@ -192,8 +232,6 @@ const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
           ))}
       </button>
 
-      {/* KHU VỰC THÊM ANIMATION CẤP 3: Module -> Asset */}
-      {/* KHÔNG CẦN DÙNG AnimatePresence Ở ĐÂY VÌ NỘI DUNG KHÔNG BỊ XÓA KHỎI DOM */}
       <motion.div
         variants={collapseVariants}
         initial="closed"
@@ -216,7 +254,7 @@ const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
 const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
   const isTopicOpen = topic.id === openTopicId;
 
-  // Logic active/state giữ nguyên
+  // Lấy ID Module Active (Chỉ cần nếu Topic này là Topic Active)
   const initiallyOpenModuleId = useMemo(() => {
     if (topic.isActive) {
       return topic.modules.find((m) => m.isActive)?.id || null;
@@ -224,51 +262,50 @@ const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
     return null;
   }, [topic.modules, topic.isActive]);
 
-  const [openModuleId, setOpenModuleId] = useState(initiallyOpenModuleId);
+  // Luôn đặt Module con ban đầu là đóng (null)
+  const [openModuleId, setOpenModuleId] = useState(null);
 
   const toggleTopicOpen = () => {
     setOpenTopicId(isTopicOpen ? null : topic.id);
   };
 
+  // LOGIC ĐIỀU KHIỂN MODULE CON (CẤP 3)
   useEffect(() => {
-    if (topic.isActive) {
-      setOpenTopicId(topic.id);
-      setOpenModuleId(initiallyOpenModuleId);
+    if (topic.isActive && isTopicOpen) {
+      // Logic Active: Nếu Topic chứa bài học cũ VÀ đang mở, mở Module con
+      if (initiallyOpenModuleId) {
+        setOpenModuleId(initiallyOpenModuleId);
+      }
     } else if (!isTopicOpen) {
+      // Đóng Topic: Đóng Module con
       setOpenModuleId(null);
     }
-  }, [
-    isTopicOpen,
-    initiallyOpenModuleId,
-    topic.isActive,
-    topic.id,
-    setOpenTopicId,
-  ]);
+    // KHÔNG CÓ LOGIC NÀO TỰ ĐỘNG MỞ MODULE KHI topic.isActive = false và isTopicOpen = true
+    // -> Đảm bảo Module con luôn đóng khi truy cập lần đầu.
+  }, [topic.isActive, isTopicOpen, initiallyOpenModuleId]);
 
-  const shouldBeOpen = isTopicOpen || topic.isActive;
+  const shouldBeOpen = isTopicOpen; // TopicItem chỉ mở khi openTopicId khớp
   const isActiveTopic = topic.isActive;
 
   return (
     <motion.div
-      layout // Quan trọng để các TopicItem khác di chuyển mượt mà
+      layout
       className={`
-
-            bg-white 
-            rounded-lg 
-            shadow-sm 
-            border 
-            border-gray-200 
-            overflow-hidden 
-        `}
+                 bg-white 
+                 rounded-lg 
+                 shadow-sm 
+                 border 
+                 border-gray-200 
+                 overflow-hidden 
+             `}
     >
-      {/* Thanh tiêu đề chính (Cấp 2) */}
       <button
         className={`w-full flex justify-between items-center p-3 pl-4 text-sm font-bold transition-colors 
-                        ${
-                          isActiveTopic
-                            ? "bg-[#E5F6F6] text-[#00839D] border-l-4 border-[#00839D] rounded-lg"
-                            : "hover:bg-gray-50 text-gray-800"
-                        }`}
+                         ${
+                           isActiveTopic
+                             ? "bg-[#E5F6F6] text-[#00839D] border-l-4 border-[#00839D] rounded-lg"
+                             : "hover:bg-gray-50 text-gray-800"
+                         }`}
         onClick={toggleTopicOpen}
       >
         <span className="truncate">{topic.title}</span>
@@ -284,8 +321,6 @@ const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
         </div>
       </button>
 
-      {/* KHU VỰC THÊM ANIMATION CẤP 2: Topic -> Module */}
-      {/* SỬ DỤNG motion.div và variants */}
       <motion.div
         variants={collapseVariants}
         initial="closed"
@@ -310,38 +345,71 @@ const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
 // Component Sidebar chính (Cấp 1)
 export default function CourseSidebar({ rawData }) {
   const stages = rawData?.stages || [];
-  const courseTabs = useMemo(() => mapStagesToTabs(stages), [stages]);
+  const assetCurrent = useCourseStore((state) => state.assetCurrent);
 
-  const defaultTab = courseTabs.find((tab) => tab.isActive)?.slug || "n1-junbi";
+  // 1. XÁC ĐỊNH ID BÀI HỌC CUỐI CÙNG VÀ TRẠNG THÁI TRUY CẬP
+  const lastViewedId = useMemo(() => {
+    if (typeof window === "undefined") return 0;
+    return parseInt(localStorage.getItem(LAST_VIEWED_KEY) || "0", 10);
+  }, [assetCurrent?.id]);
+
+  const activeIdSource = lastViewedId > 0 ? lastViewedId : null;
+
+  // Tính toán lại Tabs khi có thay đổi
+  const finalCourseTabs = useMemo(() => {
+    // Truyền activeIdSource: null nếu là lần đầu, hoặc ID nếu có bài cũ
+    return mapStagesToTabs(stages, activeIdSource);
+  }, [stages, activeIdSource]);
+
+  // 2. TÌM TAB MỞ MẶC ĐỊNH
+  // Tab mặc định là Tab chứa bài học Active (nếu có), nếu không là Tab đầu tiên
+  const defaultTab =
+    finalCourseTabs.find((tab) => tab.isActive)?.slug ||
+    finalCourseTabs[0]?.slug ||
+    "n1-junbi";
   const [activeTabSlug, setActiveTabSlug] = useState(defaultTab);
 
-  const activeTabData = courseTabs.find((tab) => tab.slug === activeTabSlug);
+  const activeTabData = finalCourseTabs.find(
+    (tab) => tab.slug === activeTabSlug
+  );
 
+  // 3. TÌM TOPIC MỞ MẶC ĐỊNH (CẤP 2)
   const initiallyOpenTopicId = useMemo(() => {
-    return activeTabData?.topics.find((t) => t.isActive)?.id || null;
-  }, [activeTabData]);
+    // A. Nếu CÓ bài học cũ (activeIdSource != null), mở Topic chứa bài đó
+    if (activeIdSource) {
+      return activeTabData?.topics.find((t) => t.isActive)?.id || null;
+    }
+    // B. Nếu KHÔNG CÓ bài học cũ, mở Topic đầu tiên của Tab hiện tại (YÊU CẦU CỦA BẠN)
+    return activeTabData?.topics[0]?.id || null;
+  }, [activeTabData, activeIdSource]);
 
   const [openTopicId, setOpenTopicId] = useState(initiallyOpenTopicId);
 
+  // Kích hoạt lại Topic mặc định khi Tab thay đổi (và lần đầu render)
   useEffect(() => {
     setOpenTopicId(initiallyOpenTopicId);
   }, [activeTabSlug, initiallyOpenTopicId]);
+
+  // Kích hoạt lại Active Tab khi dữ liệu thay đổi
+  useEffect(() => {
+    setActiveTabSlug(defaultTab);
+  }, [defaultTab]);
 
   return (
     <div className="w-full min-w-72 flex-shrink-0 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden h-[80vh] flex flex-col font-sans">
       <div className="flex flex-col h-full">
         {/* Thanh Tabs trên cùng (Cấp 1) */}
         <div className="flex justify-around flex-shrink-0 p-2 bg-white border-b border-gray-200">
-          {courseTabs.map((tab) => (
+          {finalCourseTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTabSlug(tab.slug)}
               className={`flex flex-col items-center py-1 px-2 text-xs font-medium transition-colors 
-                                ${
-                                  activeTabSlug === tab.slug
-                                    ? "text-[#00839D] border-b-2 border-[#00839D]"
-                                    : "text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
-                                }`}
+                                 ${
+                                   activeTabSlug === tab.slug
+                                     ? "text-[#00839D] border-b-2 border-[#00839D]"
+                                     : "text-gray-500 hover:text-gray-700 border-b-2 border-transparent"
+                                 }`}
             >
               {tab.slug === "n1-luyen_de" || tab.slug === "n1-bo_tro" ? (
                 <ClipboardList size={20} className="mb-1" />
