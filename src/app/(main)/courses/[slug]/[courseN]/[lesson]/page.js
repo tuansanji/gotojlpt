@@ -3,7 +3,7 @@
 import useCourseStore from "@/store/courseStore";
 import CourseSidebar from "./CourseSidebar";
 import VideoPlayer from "./ReactPlayer";
-import React, { useMemo, useState } from "react"; // ⬅️ THÊM useState
+import React, { useEffect, useMemo, useState } from "react"; // ⬅️ THÊM useState
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
@@ -24,9 +24,35 @@ export default function CoursePage() {
   const pathname = usePathname();
   const pathSegments = pathname.split("/");
 
-  // 1. STATE để quản lý tab hiện tại, mặc định là Lộ trình
-  const [activeTab, setActiveTab] = useState(TAB.ROADMAP);
+  const defaultTab = useMemo(() => {
+    // Đảm bảo assetCurrent tồn tại trước khi truy cập thuộc tính
+    if (!assetCurrent || !assetCurrent.id) {
+      return TAB.ROADMAP; // Giá trị dự phòng an toàn
+    }
 
+    const parentSection = findParentSection(courses, assetCurrent.id);
+    const hasPdfUrl = !!assetCurrent.url_pdf;
+    const hasParentContent = !!parentSection?.content_md;
+
+    // 1. Ưu tiên 1: Có URL PDF
+    if (hasPdfUrl) {
+      return TAB.DOC;
+    }
+
+    // 2. Ưu tiên 2: KHÔNG có URL PDF, nhưng có Content MD
+    if (!hasPdfUrl && hasParentContent) {
+      return TAB.DOC_FULL;
+    }
+
+    // 3. Ưu tiên 3: Còn lại (KHÔNG có PDF, KHÔNG có Content MD)
+    return TAB.ROADMAP;
+  }, [courses, assetCurrent]); // Dependency array: chạy lại khi dữ liệu thay đổi
+
+  // 1. STATE để quản lý tab hiện tại, mặc định là Lộ trình
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  useEffect(() => {
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
   // Lấy slug và courseN từ pathSegments
   // Giả định /courses/{slug}/{courseN}/...
   const slug = pathSegments[2];
@@ -73,7 +99,6 @@ export default function CoursePage() {
   }, [courses, assetCurrent]);
 
   // 2. Tính toán URL cho Ảnh và PDF
-  const roadmapImageUrl = `/courses/lo_trinh_${slug}_${courseN}.png`;
 
   // Hàm tìm Section cha (Cấp 2) chứa Asset hiện tại
   function findParentSection(listCourses, assetId) {
@@ -125,10 +150,12 @@ export default function CoursePage() {
           />
         );
       case TAB.ROADMAP: {
+        const normalizedSlug = slug ? String(slug).toLowerCase() : "";
+        const normalizedCourseN = courseN ? String(courseN).toLowerCase() : "";
         return (
           <Image
             key="roadmap-image" // Thêm key để React biết đây là phần tử khác
-            src={roadmapImageUrl}
+            src={`/courses/lo_trinh_${normalizedSlug}_${normalizedCourseN}.png`}
             width={1000}
             height={1000}
             className="h-full w-full mt-4 rounded-lg shadow-md"
@@ -138,17 +165,7 @@ export default function CoursePage() {
       }
       // Hiện ảnh Lộ trình
       case TAB.REPORT:
-        return (
-          <ReportTab courses={courses} assetCurrent={assetCurrent} />
-          // <div className="p-6 mt-4 bg-white rounded-lg shadow-md border border-red-200">
-          //   <h3 className="font-bold text-lg text-red-600">Báo Lỗi / Góp ý</h3>
-          //   <p className="mt-2 text-gray-700">
-          //     Vui lòng điền vào form báo lỗi để chúng tôi có thể xử lý vấn đề
-          //     của bạn.
-          //   </p>
-          //   {/* THÊM FORM BÁO LỖI Ở ĐÂY */}
-          // </div>
-        );
+        return <ReportTab courses={courses} assetCurrent={assetCurrent} />;
       default:
         return null;
     }
