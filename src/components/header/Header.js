@@ -14,22 +14,22 @@ const menuItems = [
     title: "Riki",
     link: "/riki",
     submenu: [
-      { title: "N1", link: "/courses/riki/n1" },
-      { title: "N2", link: "/courses/riki/n2" },
-      { title: "N3", link: "/courses/riki/n3" },
-      { title: "N4", link: "/courses/riki/n4" },
-      { title: "N5", link: "/courses/riki/n5" },
+      { title: "N1", link: "/courses/riki/N1" },
+      { title: "N2", link: "/courses/riki/N2" },
+      { title: "N3", link: "/courses/riki/N3" },
+      { title: "N4", link: "/courses/riki/N4" },
+      { title: "N5", link: "/courses/riki/N5" },
     ],
   },
   {
     title: "Dũng Mori",
     link: "/dungmori",
     submenu: [
-      { title: "N1", link: "/courses/dungmori/n1" },
-      { title: "N2", link: "/courses/dungmori/n2" },
-      { title: "N3", link: "/courses/dungmori/n3" },
-      { title: "N4", link: "/courses/dungmori/n4" },
-      { title: "N5", link: "/courses/dungmori/n5" },
+      { title: "N1", link: "/courses/dungmori/N1" },
+      { title: "N2", link: "/courses/dungmori/N2" },
+      { title: "N3", link: "/courses/dungmori/N3" },
+      { title: "N4", link: "/courses/dungmori/N4" },
+      { title: "N5", link: "/courses/dungmori/N5" },
     ],
   },
   {
@@ -41,23 +41,23 @@ const menuItems = [
         submenu: [
           {
             title: "N1",
-            link: "/thithu/dungmori/n1",
+            link: "/thithu/dungmori/N1",
           },
           {
             title: "N2",
-            link: "/thithu/dungmori/n2",
+            link: "/thithu/dungmori/N2",
           },
           {
             title: "N3",
-            link: "/thithu/dungmori/n3",
+            link: "/thithu/dungmori/N3",
           },
           {
             title: "N4",
-            link: "/thithu/dungmori/n4",
+            link: "/thithu/dungmori/N4",
           },
           {
             title: "N5",
-            link: "/thithu/dungmori/n5",
+            link: "/thithu/dungmori/N5",
           },
         ],
       },
@@ -67,23 +67,23 @@ const menuItems = [
         submenu: [
           {
             title: "N1",
-            link: "/thithu/riki/n1",
+            link: "/thithu/riki/N1",
           },
           {
             title: "N2",
-            link: "/thithu/riki/n2",
+            link: "/thithu/riki/N2",
           },
           {
             title: "N3",
-            link: "/thithu/riki/n3",
+            link: "/thithu/riki/N3",
           },
           {
             title: "N4",
-            link: "/thithu/riki/n4",
+            link: "/thithu/riki/N4",
           },
           {
             title: "N5",
-            link: "/thithu/riki/n5",
+            link: "/thithu/riki/N5",
           },
         ],
       },

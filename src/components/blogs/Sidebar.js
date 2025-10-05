@@ -7,9 +7,9 @@ const Sidebar = ({ categories, popularPosts }) => {
   return (
     <aside className="space-y-8">
       {/* Phần Danh mục */}
-      <div className="p-6 bg-white shadow-sm rounded-xl">
+      <div className="md:p-6 p-2 bg-white shadow-sm rounded-xl">
         <div className="course-box">
-          <div className="border-l-4 border-blue-600 p-4 my-6 bg-gray-50 rounded-lg shadow-md">
+          <div className="border-l-4 border-blue-600 p-4 md:my-6 my-3 bg-gray-50 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-blue-600 mb-2 pb-1 border-b border-dashed border-gray-300">
               Khóa học Dũng Mori & Riki: Lộ trình JLPT toàn diện
             </h2>
@@ -49,8 +49,8 @@ const Sidebar = ({ categories, popularPosts }) => {
       </div>
 
       {/* Phần Bài viết nổi bật */}
-      <div className="p-6 bg-white shadow-sm rounded-xl">
-        <h3 className="mb-4 text-lg font-bold text-gray-800">
+      <div className="md:p-6 p-3 bg-white shadow-sm rounded-xl">
+        <h3 className="md:mb-4 mb-2 text-lg font-bold text-gray-800">
           Bài viết nổi bật
         </h3>
         <ul className="space-y-4">

@@ -1,6 +1,6 @@
 // components/VideoPlayer.js
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import ReactPlayer from "react-player";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -21,7 +21,7 @@ const VideoPlayer = ({ videoUrl }) => {
         controls={true}
         width="100%"
         height="100%"
-        playing={videoUrl ? true : false}
+        // playing={videoUrl ? true : false}
         className="absolute top-0 left-0"
         config={{
           file: {

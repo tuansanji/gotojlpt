@@ -88,7 +88,7 @@ export default function PdfViewer({ pdfUrl }) {
   const devicePixelRatio =
     typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
   // Sử dụng 1.5 hoặc devicePixelRatio * 0.75 để tăng cường độ nét
-  const customScale = devicePixelRatio > 1 ? devicePixelRatio * 0.75 : 1.5;
+  const customScale = devicePixelRatio > 1 ? devicePixelRatio * 0.75 : 1;
 
   // 🌟 SỬ DỤNG useMemo để tính toán MẢNG CÁC URL CẦN RENDER
   const pdfFiles = useMemo(() => normalizePdfUrls(pdfUrl), [pdfUrl]);

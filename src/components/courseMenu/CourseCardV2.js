@@ -12,24 +12,8 @@ const CourseCardV2 = ({ course }) => {
   const setLoading = useStatusStore((state) => state.setLoading);
   const routes = useRouter();
 
-  //   const setNCourseCurrent = useCourseStore((state) => state.setNCourseCurrent);
-  //   const setURL_VIDEO = useCourseStore((state) => state.setURL_VIDEO);
-
   const handleGetDetailCourse = (course) => {
     routes.push(`/courses/${course.provider}/${course.level}`);
-    // token && setLoading(true);
-    // try {
-    //   //   const courseData = await getDetailCourse(token, id);
-    //   //   setNCourseCurrent(courseData);
-    //   //   setURL_VIDEO(courseData?.stages[0]?.url_intro || "");
-    //   //   setIsEdit();
-    //   //   setLoading(false);
-    // } catch (error) {
-    //   //   toast.error("Lỗi khi tải khóa học. Vui lòng liên hệ admin");
-    //   //   setLoading(false);
-    // } finally {
-    //   //   setLoading(false);
-    // }
   };
 
   // Hàm định dạng tiền tệ Việt Nam
@@ -52,7 +36,7 @@ const CourseCardV2 = ({ course }) => {
 
     return (
       <span
-        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${color}`}
+        className={` justify-center rounded-full px-2 py-0.5 text-xs font-medium ${color} flex-shrink-0`}
       >
         {text}
       </span>
@@ -60,20 +44,18 @@ const CourseCardV2 = ({ course }) => {
   };
 
   return (
-    <div
-      onClick={() => {
-        handleGetDetailCourse(course);
-      }}
-      // href={course.url}
+    <Link
+      href={`/courses/${course.provider}/${course.level}`}
+      passHref
       className="block bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 cursor-pointer"
-      target="_blank"
-      rel="noopener noreferrer"
     >
-      <div className="p-6">
+      {/* 🌟 FIX: Giảm padding tổng thể */}
+      <div className="md:p-5 p-3">
         {/* Header: Level & Provider */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex  justify-between items-center mb-4">
           <span
-            className={`text-lg font-extrabold px-3 py-1 rounded-full ${
+            // 🌟 FIX: Giảm kích thước Level Tag
+            className={`text-sm justify-center flex items-center  font-extrabold px-3 py-1 rounded-full flex-shrink-0 ${
               course.level === "N1"
                 ? "bg-yellow-400 text-gray-800"
                 : "bg-indigo-500 text-white"
@@ -82,7 +64,8 @@ const CourseCardV2 = ({ course }) => {
             {course.level}
           </span>
           <p
-            className={`text-2xl font-extrabold capitalize tracking-wider 
+            // 🌟 FIX: Giảm kích thước Provider, kết hợp min-w-0 truncate để co lại
+            className={`md:text-xl text-[13px] font-extrabold capitalize tracking-wider min-w-0 truncate
           ${course.provider === "dungmori" ? "text-red-600" : "text-blue-600"}`}
           >
             {course.provider}
@@ -90,29 +73,30 @@ const CourseCardV2 = ({ course }) => {
         </div>
 
         {/* Title & Description */}
-        <h2 className="text-xl font-bold text-gray-900 mb-2 truncate">
+        <h2 className="md:text-lg  text-[13px]  font-bold text-gray-900 mb-2 truncate">
           {course.title}
         </h2>
-        <p className="text-gray-600 text-sm h-10 overflow-hidden mb-4">
+        <p className="text-gray-600 md:text-sm  text-[12px]  h-10 overflow-hidden mb-2 md:mb-4">
           {course.short_desc}
         </p>
 
         {/* Tags & Price */}
-        <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-          <div className="space-y-1">
-            <p className="text-2xl font-bold text-red-600">
+        <div className="flex justify-between items-center pt-2 md:pt-4 border-t border-gray-100">
+          {/* FIX: Dùng flex-grow và min-w-0 để khối giá tiền co lại và chiếm hết chỗ còn lại */}
+          <div className="space-y-1   flex-grow min-w-0">
+            <p className="text-[12px] md:text-xl font-bold text-red-600 truncate">
               {formatPrice(course.price)}
             </p>
             {course.stages_count > 0 && (
               <p className="text-xs text-gray-500">
-                {course.stages_count} Module
+                {course.stages_count} Chặng
               </p>
             )}
           </div>
           <DeliveryTag mode={course.delivery_mode} />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

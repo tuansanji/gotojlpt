@@ -73,9 +73,9 @@ const categories = [
 
 export default function BlogPage() {
   return (
-    <div className="px-4 py-10 bg-gray-100 md:px-10">
+    <div className="md:mt-10 mt-3 px-4 py-10  md:px-10">
       <div className="container mx-auto">
-        <h1 className="mb-8 text-4xl font-bold text-center text-gray-800">
+        <h1 className="mb-8 text-4xl   border-b-2 pb-3 capitalize  font-extrabold text-center text-slate-700">
           Riki Blog
         </h1>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

@@ -6,6 +6,7 @@ import Link from "next/link";
 
 // Giả sử bạn có các icon SVG
 const icons = {
+  // ... (Icons giữ nguyên)
   basic: (
     <svg
       className="w-5 h-5 text-gray-500"
@@ -58,29 +59,34 @@ const icons = {
 
 const ExamCard = ({ course }) => {
   return (
-    <div className="relative w-full md:max-w-[70%] p-6 mx-auto mt-6 bg-white border border-gray-200 shadow-xl rounded-3xl">
-      {/* Container chính của toàn bộ thẻ */}
-      <div className="flex flex-col items-start space-y-6 md:flex-row md:items-center md:space-y-0 md:space-x-10">
+    // 🌟 FIX: Đặt max-w-4xl (hoặc kích thước hợp lý) và mx-auto, loại bỏ w-full md:max-w-[70%]
+    <div className="relative max-w-4xl p-6  md:mx-auto mx-4 mt-6 bg-white border border-gray-200 shadow-xl rounded-3xl">
+      {/* Container chính: Đã thêm md:justify-center để hỗ trợ căn giữa tốt hơn */}
+      <div className="flex flex-col items-start space-y-6 md:flex-row **md:items-center** md:space-y-0 md:space-x-10">
         {/* Hình ảnh chính */}
-        <div className="relative flex-shrink-0 w-full md:w-auto">
+        {/* 🌟 FIX: w-full h-auto trên mobile, cố định trên md trở lên */}
+        <div className="relative flex-shrink-0 w-full h-auto md:w-[300px]">
           <Image
             src={course.image}
             alt={course.title}
             width={300}
             height={200}
-            className="shadow-lg rounded-2xl"
+            // 🌟 FIX: Thêm h-auto w-full để Image responsive trên mobile
+            className="shadow-lg rounded-2xl w-full h-auto"
           />
         </div>
 
         {/* Nội dung bên phải */}
-        <div className="flex-1 space-y-4">
+        {/* 🌟 FIX: Thêm flex-col justify-center để các nội dung con được căn giữa theo chiều dọc */}
+        <div className="flex-1 space-y-4 flex flex-col justify-center">
           {/* Tiêu đề */}
           <h2 className="text-3xl font-bold text-gray-800">
-            Luyện Thi Tiếng Nhật <span className="text-pink-500"> Riki</span>
+            Luyện thi JLPT
+            <span className="text-pink-500"> {course.provider}</span>
           </h2>
 
           {/* Mô tả ngắn */}
-          <div className="flex items-center space-x-6 text-sm font-medium text-gray-600 md:text-base">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-gray-600 md:text-base">
             <div className="flex items-center space-x-2">
               {icons.basic}
               <span>{course.level}</span>
@@ -104,7 +110,7 @@ const ExamCard = ({ course }) => {
             {course.levels.map((level, index) => (
               <span
                 key={index}
-                className={`flex items-center justify-center w-12 h-12 rounded-full border border-gray-400 font-bold ${
+                className={`flex items-center justify-center md:w-12 w-10 md:h-12 h-10 rounded-full border border-gray-400 font-bold ${
                   level.active
                     ? "bg-green-600 text-white border-green-600"
                     : "text-gray-700"
@@ -115,7 +121,7 @@ const ExamCard = ({ course }) => {
             ))}
           </div>
 
-          {/* Nút Xem chi tiết */}
+          {/* Nút Xem chi tiết (giữ nguyên, căn phải) */}
           <div className="flex justify-end pt-4">
             <Link
               href={course.link}
