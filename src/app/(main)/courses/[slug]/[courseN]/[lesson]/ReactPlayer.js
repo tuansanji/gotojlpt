@@ -1,11 +1,22 @@
-// components/VideoPlayer.js
 "use client";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import ReactPlayer from "react-player";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 const VideoPlayer = ({ videoUrl }) => {
+  const [isPlaying, setIsPlaying] = useState(true);
+  // 🌟 useEffect: Lắng nghe sự thay đổi của videoUrl
+  useEffect(() => {
+    setIsPlaying(true);
+  }, [videoUrl]);
+  const handlePause = () => {
+    setIsPlaying(false);
+  };
+
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
+
   if (!videoUrl) {
     return (
       <div className="p-4 text-center text-gray-500 ">
@@ -21,7 +32,10 @@ const VideoPlayer = ({ videoUrl }) => {
         controls={true}
         width="100%"
         height="100%"
-        playing={videoUrl ? true : false}
+        // playing={videoUrl ? true : false}
+        playing={isPlaying}
+        onPause={handlePause}
+        onPlay={handlePlay}
         className="absolute top-0 left-0"
         config={{
           file: {

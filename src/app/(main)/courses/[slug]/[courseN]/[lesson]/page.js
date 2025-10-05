@@ -11,14 +11,6 @@ import { Menu, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import ReportTab from "./ReportTab";
 
-// Định nghĩa các hằng số cho tab
-const TAB = {
-  DOC: "DOCUMENT",
-  DOC_FULL: "FULL_DOCUMENT",
-  ROADMAP: "ROADMAP",
-  REPORT: "REPORT",
-};
-
 export default function CoursePage() {
   const courses = useCourseStore((state) => state.courses);
   const assetCurrent = useCourseStore((state) => state.assetCurrent);
@@ -27,7 +19,13 @@ export default function CoursePage() {
 
   // STATE MỚI: Quản lý trạng thái đóng/mở của sidebar (cho mobile)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  // Định nghĩa các hằng số cho tab
+  const TAB = {
+    DOC: "DOCUMENT",
+    DOC_FULL: "FULL_DOCUMENT",
+    ROADMAP: "ROADMAP",
+    REPORT: "REPORT",
+  };
   const defaultTab = useMemo(() => {
     // Đảm bảo assetCurrent tồn tại trước khi truy cập thuộc tính
     if (!assetCurrent || !assetCurrent.id) {
