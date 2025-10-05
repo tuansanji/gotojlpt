@@ -159,6 +159,7 @@ const AssetItem = ({ item }) => {
   const isLocked = item.is_lock;
 
   const handleClick = () => {
+    console.log(item);
     // 🌟 1. CHẶN SỰ KIỆN NẾU ASSET BỊ KHÓA
     if (isLocked) {
       return; // Dừng hàm nếu tài sản bị khóa

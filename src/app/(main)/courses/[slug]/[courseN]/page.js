@@ -27,7 +27,7 @@ const CourseContent = ({ params }) => {
 
       try {
         // API của bạn yêu cầu idCourse, tôi dùng 1 làm ví dụ
-        const courseData = await getCourses(setIdCourse(slug, courseN));
+        const courseData = await getCourses(setIdCourse(slug, courseN), token);
         setCourses(courseData); // Lưu dữ liệu vào store
         setLoading(false);
       } catch (error) {

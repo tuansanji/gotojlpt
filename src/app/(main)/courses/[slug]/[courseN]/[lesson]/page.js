@@ -112,45 +112,6 @@ export default function CoursePage() {
     return null;
   }
 
-  // Hàm giả định (Bạn cần thay thế bằng logic truy vấn dữ liệu thực tế của bạn)
-  const findAssetHierarchy = (courses, assetCurrent) => {
-    const assetId = assetCurrent?.id;
-    if (!assetId) return [];
-
-    const hierarchy = [];
-
-    // 1. Lặp qua Stages (Cấp 1)
-    for (const stage of courses.stages || []) {
-      // Tên cấp cha (stages) thường dùng title hoặc name
-      const stageName = stage.title || stage.name;
-
-      // 2. Lặp qua Sections (Cấp 2)
-      for (const section of stage.sections || []) {
-        const sectionName = section.title || section.name;
-
-        // 3. Lặp qua Lessons (Cấp 3)
-        for (const lesson of section.lessons || []) {
-          const lessonName = lesson.title || lesson.name;
-
-          // 4. Lặp qua Assets (Cấp 4)
-          for (const asset of lesson.assets || []) {
-            if (asset.id === assetId) {
-              // Đã tìm thấy asset, trả về chuỗi cấp bậc
-              const assetName = asset.title || asset.name;
-
-              // Trả về một mảng chứa tên các cấp cha theo thứ tự
-              return [stageName, sectionName, lessonName, assetName].filter(
-                Boolean
-              ); // Lọc bỏ giá trị null/undefined
-            }
-          }
-        }
-      }
-    }
-
-    return []; // Không tìm thấy
-  };
-
   const PdfViewer = dynamic(() => import("./PdfViewer"), { ssr: false });
   // 3. Hàm render nội dung dựa trên tab
   const renderContent = () => {

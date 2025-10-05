@@ -1,7 +1,6 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const getCourses = async (idCourse, authToken) => {
   // 1. Kiểm tra Token
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   try {
     const response = await fetch(
