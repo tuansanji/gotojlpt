@@ -152,7 +152,7 @@ const mapStagesToTabs = (stages, activeIdSource) => {
 // ----------------------------------------------------------------------
 
 // Component cấp độ 4: Asset/Item
-const AssetItem = ({ item }) => {
+const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
   const setAssetCurrent = useCourseStore((state) => state.setAssetCurrent);
 
   // 🌟 Đảm bảo item.is_lock được sử dụng thay vì item.isLocked nếu tên thuộc tính là 'is_lock'
@@ -168,6 +168,7 @@ const AssetItem = ({ item }) => {
 
     // CẬP NHẬT STATE GLOBAL VÀ LOCAL STORAGE
     setAssetCurrent(assetDataToStore);
+    isSidebarOpen && setIsSidebarOpen(false);
     if (typeof window !== "undefined") {
       localStorage.setItem(LAST_VIEWED_KEY, item.id.toString());
     }
@@ -222,7 +223,13 @@ const AssetItem = ({ item }) => {
 };
 
 // Component cấp độ 3: Module (Giữ nguyên)
-const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
+const ModuleItem = ({
+  module,
+  openModuleId,
+  setOpenModuleId,
+  setIsSidebarOpen,
+  isSidebarOpen,
+}) => {
   const isOpen = module.id === openModuleId;
   const isActive = module.isActive;
 
@@ -263,7 +270,11 @@ const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
         <ul className="bg-white">
           {module.items.map((item) => (
             <li key={item.id}>
-              <AssetItem item={item} />
+              <AssetItem
+                setIsSidebarOpen={setIsSidebarOpen}
+                isSidebarOpen={isSidebarOpen}
+                item={item}
+              />
             </li>
           ))}
         </ul>
@@ -273,7 +284,13 @@ const ModuleItem = ({ module, openModuleId, setOpenModuleId }) => {
 };
 
 // Component cấp độ 2: Topic (ACCORDION)
-const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
+const TopicItem = ({
+  topic,
+  openTopicId,
+  setOpenTopicId,
+  setIsSidebarOpen,
+  isSidebarOpen,
+}) => {
   const isTopicOpen = topic.id === openTopicId;
 
   // Lấy ID Module Active (Chỉ cần nếu Topic này là Topic Active)
@@ -352,6 +369,8 @@ const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
         <div className="bg-white">
           {topic.modules.map((module) => (
             <ModuleItem
+              setIsSidebarOpen={setIsSidebarOpen}
+              isSidebarOpen={isSidebarOpen}
               key={module.id}
               module={module}
               openModuleId={openModuleId}
@@ -365,7 +384,11 @@ const TopicItem = ({ topic, openTopicId, setOpenTopicId }) => {
 };
 
 // Component Sidebar chính (Cấp 1)
-export default function CourseSidebar({ rawData }) {
+export default function CourseSidebar({
+  rawData,
+  setIsSidebarOpen,
+  isSidebarOpen,
+}) {
   const stages = rawData?.stages || [];
   const assetCurrent = useCourseStore((state) => state.assetCurrent);
 
@@ -418,7 +441,7 @@ export default function CourseSidebar({ rawData }) {
   }, [defaultTab]);
 
   return (
-    <div className="w-full min-w-72 flex-shrink-0 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden h-[80vh] flex flex-col font-sans">
+    <div className="w-full min-w-72 h-[88%] flex-shrink-0 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden md:h-[80vh] flex flex-col font-sans">
       <div className="flex flex-col h-full">
         {/* Thanh Tabs trên cùng (Cấp 1) */}
         <div className="flex justify-around flex-shrink-0 p-2 bg-white border-b border-gray-200">
@@ -453,6 +476,8 @@ export default function CourseSidebar({ rawData }) {
                 topic={topic}
                 openTopicId={openTopicId}
                 setOpenTopicId={setOpenTopicId}
+                setIsSidebarOpen={setIsSidebarOpen}
+                isSidebarOpen={isSidebarOpen}
               />
             ))}
             {/* Mục Test đầu vào N1 (thêm layout motion để di chuyển mượt) */}

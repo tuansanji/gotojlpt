@@ -1,99 +1,119 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
-// Tự host file Worker để đảm bảo tính ổn định
+// Tự host file Worker (Giữ nguyên)
 if (typeof window !== "undefined") {
   pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
 
   const originalWarn = console.warn;
   console.warn = function (...args) {
-    // Lọc cảnh báo về cache
     if (
       typeof args[0] === "string" &&
-      args[0].includes("GlobalImageCache.setData")
+      (args[0].includes("GlobalImageCache.setData") ||
+        args[0].includes("Knockout groups not supported"))
     ) {
       return;
     }
-    // Lọc cảnh báo về knockout groups
-    if (
-      typeof args[0] === "string" &&
-      args[0].includes("Knockout groups not supported")
-    ) {
-      return;
-    }
-    // Hiển thị tất cả các cảnh báo khác
     originalWarn.apply(console, args);
   };
 }
 
-// ----------------------------------------------------
-// HÀM TIỆN ÍCH: CHUẨN HÓA ĐẦU VÀO THÀNH MẢNG CÁC OBJECT PDF
-// ----------------------------------------------------
+// HÀM TIỆN ÍCH: CHUẨN HÓA ĐẦU VÀO (Giữ nguyên)
 const normalizePdfUrls = (pdfUrl) => {
   const API_URL_BASE = "https://api.gotojlpt.com/pdf/";
   let urlsToRender = [];
-  let processedUrl = pdfUrl; // Biến tạm để giữ dữ liệu đã phân tích
+  let processedUrl = pdfUrl;
 
-  // 🌟 BƯỚC SỬA LỖI: Thử phân tích chuỗi JSON thành mảng nếu nó có vẻ là mảng
-  // Điều này rất quan trọng nếu pdfUrl được truyền vào dưới dạng một chuỗi JSON.
   if (typeof pdfUrl === "string" && pdfUrl.trim().startsWith("[")) {
     try {
-      // Thử parse chuỗi thành mảng
       processedUrl = JSON.parse(pdfUrl);
     } catch (e) {
       console.error("Failed to parse pdfUrl as JSON Array:", e);
-      // Giữ nguyên chuỗi nếu parse thất bại
       processedUrl = pdfUrl;
     }
   }
 
-  // TRƯỜNG HỢP 1: Đầu vào là MẢNG (hoặc đã được parse thành mảng)
   if (Array.isArray(processedUrl)) {
     urlsToRender = processedUrl
-      .filter((item) => item && item.path && item.type === "pdf") // Chỉ lấy các mục là pdf
+      .filter((item) => item && item.path && item.type === "pdf")
       .map((item) => {
-        // Tạo URL đầy đủ
         const url = item.path.startsWith("http")
           ? item.path
           : `${API_URL_BASE}${item.path}`;
         return {
-          url: encodeURI(url), // Mã hóa URL
+          url: encodeURI(url),
           path: item.path,
         };
       });
-  }
-  // TRƯỜNG HỢP 2: Đầu vào là CHUỖI (URL đơn)
-  else if (typeof processedUrl === "string" && processedUrl) {
+  } else if (typeof processedUrl === "string" && processedUrl) {
     let fullUrl = processedUrl;
-    // Nếu chuỗi là đường dẫn tương đối, thêm API_URL_BASE
     if (!processedUrl.startsWith("http")) {
       fullUrl = `${API_URL_BASE}${processedUrl}`;
     }
-    // Tạo mảng chỉ với 1 phần tử
     urlsToRender = [{ url: encodeURI(fullUrl), path: processedUrl }];
   }
 
   return urlsToRender;
 };
+
 // ----------------------------------------------------
 
 export default function PdfViewer({ pdfUrl }) {
   const [loadingError, setLoadingError] = useState(null);
 
-  // 🌟 TÍNH TOÁN SCALE TỐI ƯU cho độ sắc nét (Giữ nguyên)
+  // STATE: Chiều rộng Responsive cho PDF
+  const [pdfContainerWidth, setPdfContainerWidth] = useState(null);
+
+  // 🌟 STATE MỚI: Chiều rộng cửa sổ cho tính toán chính xác
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
+
+  // 🌟 THAY ĐỔI: useEffect để theo dõi chiều rộng cửa sổ
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 🌟 THAY ĐỔI: Tính toán chiều rộng PDF dựa trên WindowWidth
+  useEffect(() => {
+    const DESKTOP_BREAKPOINT = 768;
+    const MARGIN_MOBILE = 32; // mx-4 = 1rem * 2 = 32px
+    const DESKTOP_CONTENT_MAX = 700;
+
+    if (windowWidth >= DESKTOP_BREAKPOINT) {
+      // Desktop: Lấy chiều rộng cố định 700px và trừ đi 40px padding an toàn (660px)
+      // (Đảm bảo nó không bao giờ vượt quá 660px trên desktop)
+      setPdfContainerWidth(DESKTOP_CONTENT_MAX - 40);
+    } else {
+      // Mobile: Chiều rộng viewport trừ đi margin mx-4 (32px)
+      // Điều này đảm bảo nó vừa khít với vùng nội dung <main>
+      setPdfContainerWidth(windowWidth - MARGIN_MOBILE);
+    }
+  }, [windowWidth]);
+
+  // TÍNH TOÁN SCALE TỐI ƯU
   const devicePixelRatio =
     typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-  // Sử dụng 1.5 hoặc devicePixelRatio * 0.75 để tăng cường độ nét
-  const customScale = devicePixelRatio > 1 ? devicePixelRatio * 0.75 : 1;
 
-  // 🌟 SỬ DỤNG useMemo để tính toán MẢNG CÁC URL CẦN RENDER
+  // 🌟 THAY ĐỔI: Sử dụng scale an toàn hơn 1.0 trên mobile.
+  // Nếu màn hình nhỏ (<768px), scale luôn là 1.0 (hoặc 1.1) để ưu tiên hiển thị toàn bộ.
+  const customScale =
+    windowWidth < 768
+      ? 1.0 // Giảm scale an toàn trên mobile
+      : devicePixelRatio > 1
+      ? devicePixelRatio * 0.75
+      : 1;
+
   const pdfFiles = useMemo(() => normalizePdfUrls(pdfUrl), [pdfUrl]);
-
-  // State để theo dõi số trang của từng file
   const [numPagesMap, setNumPagesMap] = useState({});
 
   function onDocumentLoadSuccess(index, { numPages }) {
@@ -103,7 +123,6 @@ export default function PdfViewer({ pdfUrl }) {
 
   function onDocumentLoadError(error) {
     console.error("Error loading PDF:", error);
-    // Cảnh báo người dùng về lỗi CORS
     setLoadingError(
       "Không thể tải tài liệu PDF. Vui lòng kiểm tra console. (Lỗi có thể do CORS)."
     );
@@ -129,25 +148,40 @@ export default function PdfViewer({ pdfUrl }) {
     );
   }
 
+  // Chờ đợi chiều rộng được tính toán trước khi render trang
+  if (!pdfContainerWidth) {
+    return (
+      <div className="p-4 text-center text-blue-600">
+        Đang tính toán kích thước hiển thị...
+      </div>
+    );
+  }
+
   return (
     <div
       className="pdf-display-area w-full mt-4 flex flex-col items-center overflow-y-auto"
       style={{ maxHeight: "calc(100vh - 200px)" }}
     >
-      {/* LẶP QUA MẢNG CÁC FILE VÀ RENDER MỖI FILE TRONG MỘT <Document> RIÊNG */}
+      {/* LẶP QUA MẢNG CÁC FILE VÀ RENDER MỖI FILE */}
       {pdfFiles.map((file, fileIndex) => (
         <div key={fileIndex} className="w-full flex flex-col items-center mb-8">
+          {/* Nút Tải xuống (Giữ nguyên) */}
           <a
             href={`https://api.gotojlpt.com/pdf-download/${encodeURI(
               file.path
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 mb-4"
+            // 🌟 CSS RESPONSIVE ĐÃ CẬP NHẬT:
+            // Mặc định (Mobile): px-3 py-1.5, text-sm, font-medium
+            // Desktop (md:): Tăng padding lên px-4 py-2, tăng kích thước chữ lên base
+            className="flex items-center justify-center space-x-2 px-3 py-1.5 md:px-4 md:py-2 bg-indigo-600 text-white text-sm md:text-base font-medium rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 mb-4"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              // Mặc định (Mobile): h-4 w-4
+              // Desktop (md:): Tăng lên h-5 w-5
+              className="h-4 w-4 md:h-5 md:w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -195,8 +229,10 @@ export default function PdfViewer({ pdfUrl }) {
                   pageNumber={pageIndex + 1}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
-                  width={650} // Chiều rộng cố định
-                  scale={customScale} // Tăng cường độ nét
+                  // SỬ DỤNG CHIỀU RỘNG ĐÃ TÍNH TOÁN
+                  width={pdfContainerWidth}
+                  // 🌟 SỬ DỤNG SCALE AN TOÀN HƠN
+                  scale={customScale}
                 />
               </div>
             ))}

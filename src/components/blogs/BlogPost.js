@@ -12,110 +12,99 @@ const postData = {
   author: "Riki",
   image: "/images/blog/post-1.jpg",
   content: `
-   <div class="blog-post max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-10 leading-relaxed text-gray-800">
-  <!-- Title -->
-  <h1 class="text-4xl font-extrabold mb-6 text-indigo-700 tracking-tight">
-    Học Tiếng Nhật Bắt Đầu Từ Đâu? Lộ Trình Cho Người Mới
-  </h1>
+      <div>
+          <h1>Học Tiếng Nhật Bắt Đầu Từ Đâu? Lộ Trình Cho Người Mới</h1> 
 
-  <!-- Intro -->
-  <p class="mb-6 text-lg text-gray-600">
-    Bước chân vào hành trình học tiếng Nhật, nhiều bạn cảm thấy bối rối: 
-    học bảng chữ trước hay từ vựng trước, nên tập trung vào nghe nói hay ngữ pháp? 
-    Nếu không có lộ trình rõ ràng, bạn dễ rơi vào tình trạng “học mãi không tiến bộ” 
-    và nhanh chóng nản lòng. Bài viết này sẽ giúp bạn định hướng, 
-    từng bước xây nền tảng vững chắc để học hiệu quả và bền lâu.
-  </p>
+          <p>
+            Bước chân vào hành trình học tiếng Nhật, nhiều bạn cảm thấy bối rối: 
+            học bảng chữ trước hay từ vựng trước, nên tập trung vào nghe nói hay ngữ pháp? 
+            Nếu không có lộ trình rõ ràng, bạn dễ rơi vào tình trạng “học mãi không tiến bộ” 
+            và nhanh chóng nản lòng. Bài viết này sẽ giúp bạn định hướng, 
+            từng bước xây nền tảng vững chắc để học hiệu quả và bền lâu.
+          </p>
 
-  <!-- Section 1 -->
-  <h2 class="text-2xl font-semibold mt-8 mb-3 text-indigo-700">1. Làm quen với bảng chữ cái</h2>
-  <p class="mb-4">
-    Bảng chữ cái chính là cửa ngõ đầu tiên. Tiếng Nhật có <strong>Hiragana</strong>, 
-    <strong>Katakana</strong> và hơn 2000 chữ Kanji thông dụng. 
-    Tuy nhiên, đừng vội nhảy ngay vào Kanji. Hãy đầu tư 1–2 tuần 
-    để học thật chắc Hiragana và Katakana. Viết tay nhiều lần, đọc to từng chữ 
-    và luyện bằng flashcard sẽ giúp bạn nhớ lâu hơn. 
-  </p>
-  <p class="mb-4">
-    Một mẹo nhỏ: hãy dán bảng chữ cái ở góc bàn học hoặc làm hình nền điện thoại. 
-    Việc tiếp xúc thường xuyên sẽ giúp bạn “ngấm” nhanh hơn mà không cần quá nhiều áp lực.
-  </p>
+          <h2>1. Làm quen với bảng chữ cái</h2>
+          <p>
+            Bảng chữ cái chính là cửa ngõ đầu tiên. Tiếng Nhật có <strong>Hiragana</strong>, 
+            <strong>Katakana</strong> và hơn 2000 chữ Kanji thông dụng. 
+            Tuy nhiên, đừng vội nhảy ngay vào Kanji. Hãy đầu tư 1–2 tuần 
+            để học thật chắc Hiragana và Katakana. Viết tay nhiều lần, đọc to từng chữ 
+            và luyện bằng flashcard sẽ giúp bạn nhớ lâu hơn. 
+          </p>
+          <p>
+            Một mẹo nhỏ: hãy dán bảng chữ cái ở góc bàn học hoặc làm hình nền điện thoại. 
+            Việc tiếp xúc thường xuyên sẽ giúp bạn “ngấm” nhanh hơn mà không cần quá nhiều áp lực.
+          </p>
 
-  <!-- Section 2 -->
-  <h2 class="text-2xl font-semibold mt-8 mb-3 text-indigo-700">2. Xây vốn từ vựng cơ bản</h2>
-  <p class="mb-4">
-    Sau khi đã quen với bảng chữ, hãy học từ vựng cơ bản. 
-    Khoảng <strong>300–500 từ</strong> đầu tiên sẽ bao phủ 70% các tình huống 
-    trong giao tiếp hàng ngày: chào hỏi, ăn uống, mua sắm, hỏi đường. 
-  </p>
-  <ul class="list-disc list-inside mb-4 pl-2 space-y-1 text-gray-700">
-    <li>Dùng app <span class="font-semibold text-indigo-600">Anki</span> hoặc <span class="font-semibold text-indigo-600">Quizlet</span> để học theo flashcard.</li>
-    <li>Học theo chủ đề (gia đình, trường lớp, cửa hàng) thay vì học ngẫu nhiên.</li>
-    <li>Ôn lại từ vựng cũ xen kẽ với từ mới theo nguyên tắc “spaced repetition”.</li>
-  </ul>
-  <p class="mb-4">
-    Khi gặp từ mới trong anime, bài hát hoặc truyện tranh, hãy ghi chú ngay. 
-    Việc gắn từ vựng vào sở thích giúp não bộ nhớ nhanh và lâu hơn.
-  </p>
+          <h2>2. Xây vốn từ vựng cơ bản</h2>
+          <p>
+            Sau khi đã quen với bảng chữ, hãy học từ vựng cơ bản. 
+            Khoảng <strong>300–500 từ</strong> đầu tiên sẽ bao phủ 70% các tình huống 
+            trong giao tiếp hàng ngày: chào hỏi, ăn uống, mua sắm, hỏi đường. 
+          </p>
+          <ul>
+            <li>Dùng app <strong>Anki</strong> hoặc <strong>Quizlet</strong> để học theo flashcard.</li>
+            <li>Học theo chủ đề (gia đình, trường lớp, cửa hàng) thay vì học ngẫu nhiên.</li>
+            <li>Ôn lại từ vựng cũ xen kẽ với từ mới theo nguyên tắc “spaced repetition”.</li>
+          </ul>
+          <p>
+            Khi gặp từ mới trong anime, bài hát hoặc truyện tranh, hãy ghi chú ngay. 
+            Việc gắn từ vựng vào sở thích giúp não bộ nhớ nhanh và lâu hơn.
+          </p>
 
-  <!-- Section 3 -->
-  <h2 class="text-2xl font-semibold mt-8 mb-3 text-indigo-700">3. Ngữ pháp sơ cấp (N5)</h2>
-  <p class="mb-4">
-    Ngữ pháp tiếng Nhật theo cấu trúc <strong>Chủ ngữ – Tân ngữ – Động từ</strong>. 
-    Ví dụ: 「私は本を読みます」 (Tôi đọc sách). 
-    Khi mới học, hãy tập trung vào mẫu câu đơn giản: khẳng định, phủ định, câu hỏi. 
-  </p>
-  <p class="mb-4">
-    Giáo trình <span class="font-semibold">Minna no Nihongo</span> và 
-    <span class="font-semibold">Genki</span> là lựa chọn phổ biến. 
-    Mỗi ngày học 1–2 mẫu ngữ pháp, kèm ví dụ thực tế. 
-    Bạn có thể viết nhật ký ngắn bằng tiếng Nhật để luyện áp dụng.
-  </p>
+          <h2>3. Ngữ pháp sơ cấp (N5)</h2>
+          <p>
+            Ngữ pháp tiếng Nhật theo cấu trúc <strong>Chủ ngữ – Tân ngữ – Động từ</strong>. 
+            Ví dụ: 「私は本を読みます」 (Tôi đọc sách). 
+            Khi mới học, hãy tập trung vào mẫu câu đơn giản: khẳng định, phủ định, câu hỏi. 
+          </p>
+          <p>
+            Giáo trình <strong>Minna no Nihongo</strong> và 
+            <strong>Genki</strong> là lựa chọn phổ biến. 
+            Mỗi ngày học 1–2 mẫu ngữ pháp, kèm ví dụ thực tế. 
+            Bạn có thể viết nhật ký ngắn bằng tiếng Nhật để luyện áp dụng.
+          </p>
 
-  <!-- Section 4 -->
-  <h2 class="text-2xl font-semibold mt-8 mb-3 text-indigo-700">4. Nghe và nói – đừng chờ đến khi “giỏi rồi mới luyện”</h2>
-  <p class="mb-4">
-    Sai lầm của nhiều người học là chỉ tập trung vào đọc và viết, bỏ qua nghe nói. 
-    Ngay cả khi mới biết ít từ vựng, hãy bắt đầu luyện nghe mỗi ngày. 
-    Bạn có thể:
-  </p>
-  <ul class="list-decimal list-inside mb-4 pl-2 space-y-1 text-gray-700">
-    <li>Xem anime, J-drama có phụ đề.</li>
-    <li>Nghe tin tức ngắn từ <span class="font-semibold">NHK Easy</span>.</li>
-    <li>Tập nói lại theo nhân vật (shadowing technique).</li>
-  </ul>
-  <p class="mb-4">
-    Về kỹ năng nói, hãy tìm một người bạn đồng hành hoặc dùng ứng dụng 
-    như <span class="font-semibold">HelloTalk</span> để trò chuyện với người Nhật. 
-    Sự tiến bộ sẽ đến nhanh hơn bạn nghĩ.
-  </p>
+          <h2>4. Nghe và nói – đừng chờ đến khi “giỏi rồi mới luyện”</h2>
+          <p>
+            Sai lầm của nhiều người học là chỉ tập trung vào đọc và viết, bỏ qua nghe nói. 
+            Ngay cả khi mới biết ít từ vựng, hãy bắt đầu luyện nghe mỗi ngày. 
+            Bạn có thể:
+          </p>
+          <ol>
+            <li>Xem anime, J-drama có phụ đề.</li>
+            <li>Nghe tin tức ngắn từ <strong>NHK Easy</strong>.</li>
+            <li>Tập nói lại theo nhân vật (shadowing technique).</li>
+          </ol>
+          <p>
+            Về kỹ năng nói, hãy tìm một người bạn đồng hành hoặc dùng ứng dụng 
+            như <strong>HelloTalk</strong> để trò chuyện với người Nhật. 
+            Sự tiến bộ sẽ đến nhanh hơn bạn nghĩ.
+          </p>
 
-  <!-- Section 5 -->
-  <h2 class="text-2xl font-semibold mt-8 mb-3 text-indigo-700">5. Bí quyết duy trì – học ít nhưng đều</h2>
-  <blockquote class="border-l-4 border-indigo-400 pl-4 italic text-gray-600 bg-indigo-50 rounded-r-lg py-3 mb-6">
-    “Mỗi ngày chỉ cần 30 phút. Điều quan trọng không phải là học bao nhiêu, 
-    mà là học bao lâu và liên tục thế nào.”
-  </blockquote>
-  <p class="mb-4">
-    Thay vì học dồn 3 tiếng rồi bỏ bê vài ngày, hãy duy trì nhịp độ ổn định. 
-    Bạn có thể chia nhỏ: 10 phút học chữ, 10 phút từ vựng, 10 phút nghe. 
-    Sau 3–6 tháng, sự kiên trì này sẽ mang lại kết quả rõ rệt.
-  </p>
+          <h2>5. Bí quyết duy trì – học ít nhưng đều</h2>
+          <blockquote>
+            “Mỗi ngày chỉ cần 30 phút. Điều quan trọng không phải là học bao nhiêu, 
+            mà là học bao lâu và liên tục thế nào.”
+          </blockquote>
+          <p>
+            Thay vì học dồn 3 tiếng rồi bỏ bê vài ngày, hãy duy trì nhịp độ ổn định. 
+            Bạn có thể chia nhỏ: 10 phút học chữ, 10 phút từ vựng, 10 phút nghe. 
+            Sau 3–6 tháng, sự kiên trì này sẽ mang lại kết quả rõ rệt.
+          </p>
 
-  <!-- Conclusion -->
-  <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 mt-8 shadow-inner">
-    <h3 class="text-xl font-bold text-indigo-700 mb-3">👉 Kết luận</h3>
-    <p class="text-gray-700">
-      Lộ trình học tiếng Nhật cho người mới không phức tạp: 
-      <span class="font-semibold">bảng chữ cái → từ vựng cơ bản → ngữ pháp N5 → luyện nghe nói</span>. 
-      Quan trọng nhất là sự kiên trì và niềm vui trong học tập. 
-      Hãy biến tiếng Nhật thành một phần trong cuộc sống hàng ngày – nghe nhạc, xem phim, ghi chú – 
-      để việc học không còn là áp lực, mà trở thành hành trình thú vị.
-    </p>
-  </div>
-</div>
-
-  `,
+          <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 mt-8 shadow-inner">
+            <h3>👉 Kết luận</h3>
+            <p>
+              Lộ trình học tiếng Nhật cho người mới không phức tạp: 
+              <strong>bảng chữ cái → từ vựng cơ bản → ngữ pháp N5 → luyện nghe nói</strong>. 
+              Quan trọng nhất là sự kiên trì và niềm vui trong học tập. 
+              Hãy biến tiếng Nhật thành một phần trong cuộc sống hàng ngày – nghe nhạc, xem phim, ghi chú – 
+              để việc học không còn là áp lực, mà trở thành hành trình thú vị.
+            </p>
+          </div>
+      </div>
+      `,
   tags: ["Văn hóa", "Ẩm thực", "Du lịch"],
 };
 
@@ -181,7 +170,7 @@ export default function BlogPostPage() {
 
             {/* Nội dung bài viết */}
             <div
-              className="prose text-gray-700 max-w-none"
+              className="prose prose-base prose-indigo prose-a:text-indigo-600 prose-strong:text-gray-900 text-gray-700 max-w-none"
               dangerouslySetInnerHTML={{ __html: content }}
             />
 

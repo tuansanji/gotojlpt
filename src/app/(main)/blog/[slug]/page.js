@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }) {
               />
             </div>
             <div
-              className="prose text-gray-700 max-w-none"
+              className="prose prose-base prose-indigo prose-a:text-indigo-600 prose-strong:text-gray-900 text-gray-700 max-w-none"
               dangerouslySetInnerHTML={{ __html: content }}
             />
             <div className="flex flex-wrap gap-2 mt-8 text-sm">
