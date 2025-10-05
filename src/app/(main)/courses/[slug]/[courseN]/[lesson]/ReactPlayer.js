@@ -24,20 +24,13 @@ const VideoPlayer = ({ videoUrl }) => {
         playing={videoUrl ? true : false}
         className="absolute top-0 left-0"
         config={{
-          // Cấu hình cho file video thông thường (cần thiết nếu stream thất bại)
           file: {
+            forceVideo: true,
             attributes: {
+              onContextMenu: (e) => e.preventDefault(),
               controlsList: "nodownload",
-              // Thử thêm thuộc tính cho thẻ video gốc
               disablePictureInPicture: true,
             },
-            // ✅ Thử buộc render thẻ <video> HTML5 thay vì player phức tạp
-            forceVideo: true,
-          },
-
-          // Cấu hình cho HLS/DASH (Nếu API_URL của bạn là một stream)
-          hls: {
-            // ... (tùy chọn HLS nếu bạn có)
           },
         }}
       />

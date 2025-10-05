@@ -62,6 +62,7 @@ const mapAssetsToItems = (assets, isItemActive) => {
     }
 
     return {
+      ...asset,
       id: asset.id,
       title: asset.title,
       link:
@@ -154,8 +155,17 @@ const mapStagesToTabs = (stages, activeIdSource) => {
 const AssetItem = ({ item }) => {
   const setAssetCurrent = useCourseStore((state) => state.setAssetCurrent);
 
+  // 🌟 Đảm bảo item.is_lock được sử dụng thay vì item.isLocked nếu tên thuộc tính là 'is_lock'
+  const isLocked = item.is_lock;
+
   const handleClick = () => {
+    // 🌟 1. CHẶN SỰ KIỆN NẾU ASSET BỊ KHÓA
+    if (isLocked) {
+      return; // Dừng hàm nếu tài sản bị khóa
+    }
+
     const { icon, ...assetDataToStore } = item;
+
     // CẬP NHẬT STATE GLOBAL VÀ LOCAL STORAGE
     setAssetCurrent(assetDataToStore);
     if (typeof window !== "undefined") {
@@ -166,23 +176,31 @@ const AssetItem = ({ item }) => {
   return (
     <div
       onClick={handleClick}
-      className={`flex items-center gap-2 py-2 text-sm transition-colors cursor-pointer w-full
-             ${
-               item.isActive
-                 ? "bg-[#E5F6F6] font-medium border-l-[3px] border-[#00839D]"
-                 : "hover:bg-gray-100 border-l-[3px] border-transparent"
-             }`}
+      // 🌟 2. THAY ĐỔI CSS DỰA TRÊN isLocked
+      className={`flex items-center gap-2 py-2 text-sm transition-colors w-full
+        ${
+          // Thêm class cho trạng thái BỊ KHÓA: mờ và con trỏ không được phép
+          isLocked ? "opacity-50 cursor-not-allowed" : "cursor-pointer" // Con trỏ bình thường khi không khóa
+        }
+        ${
+          item.isActive
+            ? "bg-[#E5F6F6] font-medium border-l-[3px] border-[#00839D]"
+            : "hover:bg-gray-100 border-l-[3px] border-transparent"
+        }`}
       style={{ paddingLeft: "3rem" }}
     >
       <div
-        className={`rounded-full p-1 border-2 bg-white flex-shrink-0 flex items-center justify-center ${
-          item.isActive
-            ? "text-[#00839D] border-[#00839D]"
-            : "text-red-400 border-red-400"
+        className={`rounded-full p-1 border-2 flex-shrink-0 flex items-center justify-center ${
+          // 3. ĐIỀU CHỈNH MÀU SẮC BIỂU TƯỢNG VÀ VIỀN
+          isLocked
+            ? "bg-gray-100 text-gray-500 border-gray-400" // Màu sắc khi bị khóa
+            : item.isActive
+            ? "bg-white text-[#00839D] border-[#00839D]"
+            : "bg-white text-red-400 border-red-400"
         }`}
       >
-        {item.isLocked ? (
-          <Lock size={12} className="text-gray-400" />
+        {item.is_lock ? (
+          <Lock size={12} className="text-gray-500" /> // Biểu tượng khóa (dùng item.is_lock)
         ) : (
           React.cloneElement(item.icon, { size: 12 })
         )}
@@ -190,7 +208,11 @@ const AssetItem = ({ item }) => {
 
       <span
         className={`truncate ${
-          item.isActive ? "text-[#00839D]" : "text-gray-700"
+          isLocked
+            ? "text-gray-500" // Màu chữ khi bị khóa
+            : item.isActive
+            ? "text-[#00839D]"
+            : "text-gray-700"
         }`}
       >
         {item.title}
