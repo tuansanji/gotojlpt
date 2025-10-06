@@ -6,7 +6,6 @@ import { dataExams } from "@/data/exams";
 
 const circledNums = "①②③④⑤⑥⑦⑧⑨";
 
-// ===== Helpers =====
 const sanitizeHtml = (html) => DOMPurify.sanitize(html || "");
 
 const textFromHtml = (html) => {
