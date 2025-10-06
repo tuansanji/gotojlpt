@@ -34,6 +34,7 @@ const menuItems = [
   },
   {
     title: "Thi Thử",
+    // Link ở đây sẽ bị bỏ qua vì có submenu, thẻ cha sẽ là <span>
     submenu: [
       {
         title: "Dũng Mori",
@@ -104,7 +105,8 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
   const [hoveredSubIndex, setHoveredSubIndex] = useState(null);
   return (
     <ul
-      className={`  rounded-xl py-2 z-10 min-w-[200px]   ${
+      // ĐÃ SỬA LỖI HYDRATION: Loại bỏ khoảng trắng thừa ở đầu chuỗi
+      className={`rounded-xl py-2 z-10 min-w-[200px] ${
         isSubmenu
           ? "absolute left-full top-0 ml-4"
           : "flex space-x-4 lg:space-x-6 gap-x-2"
@@ -118,32 +120,38 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
           onMouseLeave={() => !isSubmenu && setHoveredIndex(null)}
         >
           <div className="flex items-center">
-            {item.link ? (
+            {/* LOGIC MỚI: Nếu có submenu, render <span>, nếu không, kiểm tra Link */}
+            {item.submenu ? (
+              <span className="font-bold transition-colors cursor-pointer hover:text-cyan-500">
+                {item.title}
+              </span>
+            ) : item.link ? (
               item.external ? (
-                <Link
-                  href={`/courses/${item.link}`}
+                <a
+                  href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-bold transition-colors hover:text-cyan-500"
                 >
                   {item.title}
-                </Link>
+                </a>
               ) : (
                 <Link
-                  href={`/courses/${item.link}`}
+                  href={item.link}
                   className="font-bold transition-colors hover:text-cyan-500"
                 >
                   {item.title}
                 </Link>
               )
             ) : (
+              // Trường hợp không link, không submenu (chỉ là văn bản)
               <span className="font-bold transition-colors cursor-pointer hover:text-cyan-500">
                 {item.title}
               </span>
             )}
           </div>
 
-          {/* Submenu1 */}
+          {/* Submenu1 (Cấp 2) */}
           {item.submenu && !isSubmenu && hoveredIndex === index && (
             <div
               className={`slide-up absolute left-0 top-full bg-white shadow-lg rounded-xl pt-5 py-2 z-10 min-w-[200px] animate-slide-up `}
@@ -157,7 +165,12 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
                     onMouseLeave={() => setHoveredSubIndex(null)}
                   >
                     <div className="flex items-center px-5 py-2 transition-colors hover:bg-gray-100">
-                      {subItem.link ? (
+                      {/* LOGIC TƯƠNG TỰ CHO CẤP 2: Nếu có submenu con (Cấp 3), render <span> */}
+                      {subItem.submenu ? (
+                        <span className="font-bold transition-colors cursor-pointer hover:text-cyan-500">
+                          {subItem.title}
+                        </span>
+                      ) : subItem.link ? (
                         subItem.external ? (
                           <a
                             href={subItem.link}
@@ -186,7 +199,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
                         </span>
                       )}
                     </div>
-                    {/* Submenu2: Luôn render, chỉ ẩn/hiện bằng CSS và state */}
+                    {/* Submenu2 (Cấp 3): Không cần kiểm tra logic <span>/Link vì đây là cấp cuối trong menuItems hiện tại */}
                     {subItem.submenu && hoveredSubIndex === subIndex && (
                       <div
                         className={`slide-up pl-2.5 left-full absolute min-w-[200px] top-0`}
@@ -213,7 +226,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
               </ul>
             </div>
           )}
-          {/* Submenu cấp lồng (isSubmenu=true) vẫn hiện như cũ */}
+          {/* Submenu cấp lồng (isSubmenu=true) không áp dụng logic này nếu chúng là cấp cuối */}
           {item.submenu && isSubmenu && (
             <div
               className={`absolute left-full top-0 bg-white shadow-lg rounded-xl py-2 z-10 min-w-[200px]`}
@@ -221,12 +234,18 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
               <ul>
                 {item.submenu.map((subItem, subIndex) => (
                   <li key={subIndex}>
-                    <Link
-                      href={subItem.link}
-                      className="font-bold transition-colors hover:text-cyan-500"
-                    >
-                      {subItem.title}
-                    </Link>
+                    {subItem.link ? (
+                      <Link
+                        href={subItem.link}
+                        className="font-bold transition-colors hover:text-cyan-500"
+                      >
+                        {subItem.title}
+                      </Link>
+                    ) : (
+                      <span className="font-bold transition-colors cursor-pointer hover:text-cyan-500">
+                        {subItem.title}
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -238,7 +257,7 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
   );
 };
 
-const RenderMobileMenu = ({ items }) => {
+const RenderMobileMenu = ({ items, setIsMobileMenuOpen }) => {
   const [openSubmenus, setOpenSubmenus] = useState({});
 
   const toggleSubmenu = (fullIndex) => {
@@ -258,13 +277,18 @@ const RenderMobileMenu = ({ items }) => {
         return (
           <li key={currentPath} className="border-b border-gray-200">
             <div className="flex items-center justify-between px-4 py-3">
-              {item.link ? (
+              {/* LOGIC MỚI: Nếu có submenu, render <span>, nếu không, kiểm tra Link */}
+              {item.submenu ? (
+                <span className="font-bold text-gray-800">{item.title}</span>
+              ) : item.link ? (
                 item.external ? (
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-bold text-gray-800 transition-colors hover:text-cyan-500"
+                    // Thêm logic đóng menu mobile khi click vào link
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.title}
                   </a>
@@ -272,6 +296,8 @@ const RenderMobileMenu = ({ items }) => {
                   <Link
                     href={item.link}
                     className="font-bold text-gray-800 transition-colors hover:text-cyan-500"
+                    // Thêm logic đóng menu mobile khi click vào link
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.title}
                   </Link>
@@ -307,7 +333,10 @@ const Header = () => {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-center px-2 py-0 bg-white shadow-md  text-[#343A40]">
+    <header
+      // ĐÃ SỬA LỖI HYDRATION: Loại bỏ khoảng trắng thừa (ví dụ: `  text-[#343A40]`)
+      className="sticky top-0 z-50 flex items-center justify-center px-2 py-0 bg-white shadow-md text-[#343A40]"
+    >
       <div className="container flex items-center justify-between mx-0 md:mx-15">
         {/* btn mobile menu */}
         <div className="flex items-center space-x-4 md:hidden">
@@ -367,9 +396,28 @@ const Header = () => {
           <RenderDesktopMenu items={menuItems} />
         </nav>
         {user ? (
-          <Link href={`/profile/${user.id}`} className="">
-            <div className="flex">
-              <Avatar className="w-10 h-10 mr-2 md:w-12 md:h-12">
+          <Link
+            href={`/profile/${user.id}`}
+            className="flex items-center group transition-opacity duration-200 hover:opacity-85" // Thêm hiệu ứng hover cho cả khu vực
+          >
+            {/* ĐÃ ÁP DỤNG CSS CHO TÊN */}
+            <div className="flex justify-center items-center gap-2">
+              {" "}
+              {/* Giảm gap xuống 2 */}
+              <span
+                className="
+                  hidden sm:block 
+                  text-base md:text-lg 
+                  font-semibold 
+                  text-gray-800 
+                  transition-colors 
+                  group-hover:text-cyan-600 
+                  truncate max-w-[150px]
+                "
+              >
+                {user.name}
+              </span>
+              <Avatar className="w-10 h-10 md:w-12 md:h-12">
                 <AvatarImage
                   src="https://github.com/shadcn.png"
                   alt="@shadcn"
@@ -412,7 +460,11 @@ const Header = () => {
               Đóng
             </button>
           </div>
-          <RenderMobileMenu items={menuItems} />
+          {/* TRUYỀN setIsMobileMenuOpen CHO RenderMobileMenu */}
+          <RenderMobileMenu
+            items={menuItems}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+          />
         </div>
       </div>
     </header>

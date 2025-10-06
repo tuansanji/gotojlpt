@@ -165,7 +165,7 @@ const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
     }
 
     const { icon, ...assetDataToStore } = item;
-
+    console.log(assetDataToStore);
     // CẬP NHẬT STATE GLOBAL VÀ LOCAL STORAGE
     setAssetCurrent(assetDataToStore);
     isSidebarOpen && setIsSidebarOpen(false);

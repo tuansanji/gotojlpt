@@ -158,7 +158,7 @@ const Footer = () => {
           {/* Cột 3: Khóa học Riki */}
           <div className="space-y-4">
             <h3 className="mb-3 text-base font-semibold uppercase text-gray-900 tracking-wider">
-              Khóa học Riki
+              Khóa học Riki Nihongo
             </h3>
             <ul className="space-y-3 text-gray-600">
               <li>

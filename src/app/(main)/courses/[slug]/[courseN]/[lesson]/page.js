@@ -6,10 +6,12 @@ import VideoPlayer from "./ReactPlayer";
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { List, Menu, X } from "lucide-react";
 
 import dynamic from "next/dynamic";
 import ReportTab from "./ReportTab";
+import AudioPlayer from "./AudioPlayer";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CoursePage() {
   const courses = useCourseStore((state) => state.courses);
@@ -180,20 +182,54 @@ export default function CoursePage() {
     <div className="min-h-screen bg-gray-100">
       {/* NÚT MỞ/ĐÓNG SIDEBAR TRÊN MOBILE */}
       <button
-        className="md:hidden fixed bottom-6 right-6 z-50 p-4 bg-indigo-600 text-white rounded-full shadow-lg transition-transform hover:scale-105"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        // CLASS MỚI ĐÃ CHỈNH SỬA
+        className="
+
+    md:hidden 
+    fixed bottom-6 right-6 z-50 
+    text-white                          
+    bg-cyan-600 hover:bg-cyan-700     
+    hover:scale-105 transition-all duration-300
+    shadow-lg                          
+    flex items-center gap-2       justify-center       
+    py-2.5 px-4        
+                    rounded-full   
+  "
       >
-        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        {isSidebarOpen ? (
+          // Khi sidebar mở: Icon X màu trắng
+          <X size={24} className="text-white" />
+        ) : (
+          <>
+            {/* Khi sidebar đóng: Hiển thị text "Chọn bài" */}
+            {/* Icon List (màu trắng) */}
+            <List size={20} className="text-white" />
+
+            {/* Text "Chọn bài" (màu trắng, font hơi đậm) */}
+            <span className="text-sm font-medium text-white">Chọn bài</span>
+          </>
+        )}
       </button>
 
       {/* BỐ CỤC CHÍNH */}
       <div className="flex gap-6 mx-auto max-w-7xl items-start pt-0 md:p-8 md:pt-8">
         {/* MAIN CONTENT */}
         <main className="w-full md:w-[700px] flex-shrink-0">
-          {/* KHỐI VIDEO PLAYER */}
-          <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg">
-            <VideoPlayer videoUrl={videoUrl} />
-          </div>
+          {assetCurrent && assetCurrent.url_sound ? (
+            // 1. HIỂN THỊ AUDIO PLAYER (nếu url_sound có giá trị)
+            <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg p-4">
+              {/* Component AudioPlayer cần được tạo riêng */}
+              <AudioPlayer audioUrl={"/audio/demo.mp3"} />
+            </div>
+          ) : (
+            // 2. HIỂN THỊ VIDEO PLAYER (nếu url_sound là null hoặc không có)
+            <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg">
+              {assetCurrent && assetCurrent.link === "#" && (
+                <VideoPlayer videoUrl={videoUrl} />
+              )}
+            </div>
+          )}
 
           {/* KHỐI THANH ĐIỀU KHIỂN & TITLE */}
           {videoUrl && (

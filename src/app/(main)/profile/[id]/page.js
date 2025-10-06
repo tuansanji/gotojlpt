@@ -65,9 +65,16 @@ function UserProfile() {
    * Tính số ngày còn lại (hoặc đã qua) giữa ngày mục tiêu và ngày hiện tại.
    *
    * @param {string} targetDateString Chuỗi ngày mục tiêu (ví dụ: "2025-10-25T02:47:02.000000Z")
-   * @returns {number | string} Số ngày nguyên còn lại, hoặc chuỗi nếu ngày đã qua.
+   * @param {boolean} isLifetime Trạng thái vĩnh viễn của khóa học
+   * @returns {string} Chuỗi hiển thị thời gian còn lại.
    */
-  function getDaysDifference(targetDateString) {
+  function getDaysDifference(targetDateString, isLifetime) {
+    // === LOGIC MỚI: KIỂM TRA KHÓA HỌC VĨNH VIỄN ===
+    if (isLifetime) {
+      return "Vĩnh viễn";
+    }
+    // === KẾT THÚC LOGIC MỚI ===
+
     // Định nghĩa số mili giây trong một ngày
     const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -75,7 +82,6 @@ function UserProfile() {
     const targetDate = new Date(targetDateString);
 
     // 2. Thiết lập ngày hiện tại và ngày mục tiêu về 00:00:00 của ngày đó
-    // Điều này loại bỏ yếu tố thời gian trong ngày để tính số ngày chính xác hơn
     const now = new Date();
 
     // Ngày hiện tại (chỉ lấy ngày, tháng, năm)
@@ -161,11 +167,20 @@ function UserProfile() {
                   icon="📚"
                 />
                 <InfoField
+                  // CẬP NHẬT CLASS: Khi là vĩnh viễn, dùng màu xanh nổi bật
                   className={
-                    course.status === "active" ? "bg-green-100" : "bg-red-200"
+                    course.is_lifetime
+                      ? "bg-blue-100" // Màu nền cho Vĩnh viễn (ví dụ: xanh dương)
+                      : course.status === "active"
+                      ? "bg-green-100"
+                      : "bg-red-200"
                   }
                   label="Thời gian còn lại"
-                  value={getDaysDifference(course.expires_at)}
+                  // TRUYỀN THÊM THAM SỐ is_lifetime
+                  value={getDaysDifference(
+                    course.expires_at,
+                    course.is_lifetime
+                  )}
                   icon="⏳"
                 />
               </div>
