@@ -1,5 +1,5 @@
 "use client"; // This is a client component
-// Component menu desktop dùng state để điều khiển submenu2
+import clsx from "clsx";
 
 // components/Header.js
 
@@ -38,53 +38,53 @@ const menuItems = [
     submenu: [
       {
         title: "Dũng Mori",
-        link: "/thithu/dungmori",
+        link: "/exams/dungmori",
         submenu: [
           {
             title: "N1",
-            link: "/thithu/dungmori/N1",
+            link: "/exams/dungmori/N1",
           },
           {
             title: "N2",
-            link: "/thithu/dungmori/N2",
+            link: "/exams/dungmori/N2",
           },
           {
             title: "N3",
-            link: "/thithu/dungmori/N3",
+            link: "/exams/dungmori/N3",
           },
           {
             title: "N4",
-            link: "/thithu/dungmori/N4",
+            link: "/exams/dungmori/N4",
           },
           {
             title: "N5",
-            link: "/thithu/dungmori/N5",
+            link: "/exams/dungmori/N5",
           },
         ],
       },
       {
         title: "Riki",
-        link: "/thithu/riki",
+        link: "/exams/riki",
         submenu: [
           {
             title: "N1",
-            link: "/thithu/riki/N1",
+            link: "/exams/riki/N1",
           },
           {
             title: "N2",
-            link: "/thithu/riki/N2",
+            link: "/exams/riki/N2",
           },
           {
             title: "N3",
-            link: "/thithu/riki/N3",
+            link: "/exams/riki/N3",
           },
           {
             title: "N4",
-            link: "/thithu/riki/N4",
+            link: "/exams/riki/N4",
           },
           {
             title: "N5",
-            link: "/thithu/riki/N5",
+            link: "/exams/riki/N5",
           },
         ],
       },
@@ -106,11 +106,12 @@ const RenderDesktopMenu = ({ items, isSubmenu = false }) => {
   return (
     <ul
       // ĐÃ SỬA LỖI HYDRATION: Loại bỏ khoảng trắng thừa ở đầu chuỗi
-      className={`rounded-xl py-2 z-10 min-w-[200px] ${
+      className={clsx(
+        "rounded-xl py-2 z-10 min-w-[200px]",
         isSubmenu
           ? "absolute left-full top-0 ml-4"
           : "flex space-x-4 lg:space-x-6 gap-x-2"
-      }`}
+      )}
     >
       {items.map((item, index) => (
         <li

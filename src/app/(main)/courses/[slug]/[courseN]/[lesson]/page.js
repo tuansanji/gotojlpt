@@ -43,11 +43,6 @@ export default function CoursePage() {
       return TAB.DOC;
     }
 
-    // 2. Ưu tiên 2: KHÔNG có URL PDF, nhưng có Content MD
-    if (!hasPdfUrl && hasParentContent) {
-      return TAB.DOC_FULL;
-    }
-
     // 3. Ưu tiên 3: Còn lại (KHÔNG có PDF, KHÔNG có Content MD)
     return TAB.ROADMAP;
   }, [courses, assetCurrent]);
@@ -220,7 +215,7 @@ export default function CoursePage() {
             // 1. HIỂN THỊ AUDIO PLAYER (nếu url_sound có giá trị)
             <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg p-4">
               {/* Component AudioPlayer cần được tạo riêng */}
-              <AudioPlayer audioUrl={"/audio/demo.mp3"} />
+              <AudioPlayer audioUrl={assetCurrent?.url_sound} />
             </div>
           ) : (
             // 2. HIỂN THỊ VIDEO PLAYER (nếu url_sound là null hoặc không có)

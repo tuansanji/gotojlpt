@@ -33,7 +33,7 @@ function PageLogin() {
   };
   return (
     <div className="flex items-center justify-center w-full h-screen bg-center bg-cover bg-bg-form bg-form ">
-      <div role="alert" className="alert alert-success">
+      {/* <div role="alert" className="alert alert-success">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="w-6 h-6 stroke-current shrink-0"
@@ -47,8 +47,7 @@ function PageLogin() {
             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span>Your purchase has been confirmed!</span>
-      </div>
+      </div> */}
       <div className="form-container w-[350px] h-[500px] bg-white shadow-lg shadow-gray-400/35 rounded-xl box-border p-5">
         <p className="title text-center my-2.5 mx-0 text-[28px] font-extrabold">
           Đăng nhập

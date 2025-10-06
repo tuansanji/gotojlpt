@@ -123,7 +123,7 @@ function AudioPlayerCustom({
         className={`w-full md:w-[90%] mx-auto flex flex-col justify-center items-center relative gap-8`}
       >
         {/* Nút thu gọn (Giữ nguyên logic menu cũ của bạn) */}
-        <span
+        {/* <span
           className="absolute top-[-1.5rem] right-[0.5rem] cursor-pointer text-gray-600 hover:text-gray-900"
           onClick={() => {
             setMenuMusic(!menuMusic);
@@ -135,7 +135,7 @@ function AudioPlayerCustom({
             style={{ transform: menuMusic ? "rotate(180deg)" : "none" }}
             className="transition-transform duration-300"
           />
-        </span>
+        </span> */}
 
         {/* LOADING (có thể ẩn nếu logic loading đã hoàn tất) */}
         {loading && (
@@ -232,7 +232,7 @@ function AudioPlayerCustom({
         <audio
           id="audio"
           ref={audioRef}
-          src={audioUrl}
+          src={`https://api.gotojlpt.com/mp3/${audioUrl}`}
           onLoadedData={() => {
             // Đảm bảo audio loads và set duration/loading
             handleLoadedData();

@@ -1,17 +1,31 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import ReactPlayer from "react-player";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const VideoPlayer = ({ videoUrl }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   // 🌟 useEffect: Lắng nghe sự thay đổi của videoUrl
   useEffect(() => {
-    setIsPlaying(true);
+    videoUrl && setIsPlaying(true);
   }, [videoUrl]);
   const handlePause = () => {
     setIsPlaying(false);
   };
+  const playerRef = useRef(null);
+
+  useEffect(() => {
+    // Chờ ReactPlayer mount rồi tìm video element
+    const video = playerRef.current?.getInternalPlayer
+      ? playerRef.current.getInternalPlayer()
+      : document.querySelector("video");
+
+    if (video) {
+      video.setAttribute("controlsList", "nodownload noremoteplayback");
+      video.setAttribute("disablePictureInPicture", "true");
+      video.oncontextmenu = (e) => e.preventDefault();
+    }
+  }, []);
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -28,6 +42,7 @@ const VideoPlayer = ({ videoUrl }) => {
   return (
     <div className="relative pt-[56.25%]">
       <ReactPlayer
+        ref={playerRef}
         src={`${API_URL}lesson-assets/stream/${videoUrl}`}
         controls={true}
         width="100%"
@@ -41,9 +56,9 @@ const VideoPlayer = ({ videoUrl }) => {
           file: {
             forceVideo: true,
             attributes: {
-              onContextMenu: (e) => e.preventDefault(),
-              controlsList: "nodownload",
+              controlsList: "nodownload noremoteplayback",
               disablePictureInPicture: true,
+              onContextMenu: (e) => e.preventDefault(),
             },
           },
         }}

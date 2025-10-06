@@ -165,7 +165,7 @@ const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
     }
 
     const { icon, ...assetDataToStore } = item;
-    console.log(assetDataToStore);
+
     // CẬP NHẬT STATE GLOBAL VÀ LOCAL STORAGE
     setAssetCurrent(assetDataToStore);
     isSidebarOpen && setIsSidebarOpen(false);
@@ -222,7 +222,7 @@ const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
   );
 };
 
-// Component cấp độ 3: Module (Giữ nguyên)
+// Component cấp độ 3: Module
 const ModuleItem = ({
   module,
   openModuleId,
@@ -237,8 +237,14 @@ const ModuleItem = ({
     setOpenModuleId(isOpen ? null : module.id);
   };
 
+  // 🔑 Kiểm tra xem module có asset bị khóa không (ngoại trừ bài đầu tiên free)
+  const lockedItems = module.items?.filter(
+    (item, index) => index > 0 && item.is_lock
+  );
+
   return (
-    <div className="border-b border-gray-100 ">
+    <div className="border-b border-gray-100 relative">
+      {/* Header module */}
       <button
         className={`w-full flex justify-between items-center py-3 text-sm font-semibold transition-colors 
                          ${
@@ -261,14 +267,15 @@ const ModuleItem = ({
           ))}
       </button>
 
+      {/* Danh sách asset */}
       <motion.div
         variants={collapseVariants}
         initial="closed"
         animate={isOpen ? "open" : "closed"}
-        className="overflow-hidden"
+        className="overflow-hidden relative"
       >
-        <ul className="bg-white">
-          {module.items.map((item) => (
+        <ul className="bg-white relative">
+          {module.items.map((item, idx) => (
             <li key={item.id}>
               <AssetItem
                 setIsSidebarOpen={setIsSidebarOpen}
@@ -278,6 +285,21 @@ const ModuleItem = ({
             </li>
           ))}
         </ul>
+
+        {/* Nếu có asset bị khóa (ngoài bài free đầu tiên) thì show overlay */}
+        {lockedItems?.length > 0 && (
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                alert("Đi tới trang thanh toán!");
+              }}
+              className="mt-3 px-4 py-2 bg-[#00839D] text-white rounded-lg font-medium shadow-md hover:bg-[#006d82] transition pointer-events-auto"
+            >
+              Mua khóa học
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );

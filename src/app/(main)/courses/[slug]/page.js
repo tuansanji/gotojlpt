@@ -74,9 +74,5 @@ export default function PageCourse({ params }) {
     ],
   };
 
-  return (
-    <div>
-      <BusinessSection content={businessContent2} />
-    </div>
-  );
+  return <div>{/* <BusinessSection content={businessContent2} /> */}</div>;
 }
