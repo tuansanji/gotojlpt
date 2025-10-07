@@ -7,10 +7,10 @@ import examsRiki from "@/data/examsRiki";
 
 // --- ĐỊNH NGHĨA DỮ LIỆU CỐ ĐỊNH ---
 const EXAM_PERIODS = [
-  { id: 1, label: "Đợt 1", date: "24/05 - 26/05" },
-  { id: 2, label: "Đợt 2", date: "07/06 - 09/06" },
-  { id: 3, label: "Đợt 3", date: "21/06 - 23/06" },
-  { id: 4, label: "Đợt 4", date: "01/07 - 06/07" },
+  { id: 1, label: "Bài 1", date: "24/05 - 26/05" },
+  { id: 2, label: "Bài 2", date: "07/06 - 09/06" },
+  { id: 3, label: "Bài 3", date: "21/06 - 23/06" },
+  { id: 4, label: "Bài 4", date: "01/07 - 06/07" },
 ];
 
 const LEVELS = [
@@ -233,6 +233,7 @@ const JLPTSelectionPage = () => {
   };
 
   const submitButtonClass = `
+  cursor-pointer
     mt-8 w-full max-w-xs py-4 rounded-full text-white text-lg font-bold shadow-2xl transition-all duration-300
     ${
       isExamAvailable
@@ -256,10 +257,10 @@ const JLPTSelectionPage = () => {
           Bạn hãy lựa chọn đợt thi và cấp độ thi tương ứng
         </h1>
 
-        {/* CHỌN ĐỢT THI CONTAINER */}
+        {/* CHỌN BÀI THI CONTAINER */}
         <div className="bg-white p-5 pt-10 rounded-2xl shadow-xl border border-gray-100 relative mb-8">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-5 py-1 rounded-full shadow-lg border border-gray-200 text-base font-semibold text-gray-800">
-            CHỌN ĐỢT THI
+            CHỌN BÀI THI
           </div>
           <div className="flex space-x-3">
             {EXAM_PERIODS.map((period) => (
