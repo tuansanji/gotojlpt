@@ -152,7 +152,7 @@ const mapStagesToTabs = (stages, activeIdSource) => {
 // ----------------------------------------------------------------------
 
 // Component cấp độ 4: Asset/Item
-const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
+const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen, setIsLock }) => {
   const setAssetCurrent = useCourseStore((state) => state.setAssetCurrent);
 
   // 🌟 Đảm bảo item.is_lock được sử dụng thay vì item.isLocked nếu tên thuộc tính là 'is_lock'
@@ -161,9 +161,11 @@ const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
   const handleClick = () => {
     // 🌟 1. CHẶN SỰ KIỆN NẾU ASSET BỊ KHÓA
     if (isLocked) {
+      setIsLock(false);
+      isSidebarOpen && setIsSidebarOpen(false);
       return; // Dừng hàm nếu tài sản bị khóa
     }
-
+    setIsLock(true);
     const { icon, ...assetDataToStore } = item;
 
     // CẬP NHẬT STATE GLOBAL VÀ LOCAL STORAGE
@@ -178,10 +180,10 @@ const AssetItem = ({ item, setIsSidebarOpen, isSidebarOpen }) => {
     <div
       onClick={handleClick}
       // 🌟 2. THAY ĐỔI CSS DỰA TRÊN isLocked
-      className={`flex items-center gap-2 py-2 text-sm transition-colors w-full
+      className={`flex items-center gap-2 py-2 text-sm transition-colors w-full cursor-pointer
         ${
           // Thêm class cho trạng thái BỊ KHÓA: mờ và con trỏ không được phép
-          isLocked ? "opacity-50 cursor-not-allowed" : "cursor-pointer" // Con trỏ bình thường khi không khóa
+          isLocked && "opacity-50 " // Con trỏ bình thường khi không khóa
         }
         ${
           item.isActive
@@ -229,6 +231,7 @@ const ModuleItem = ({
   setOpenModuleId,
   setIsSidebarOpen,
   isSidebarOpen,
+  setIsLock,
 }) => {
   const isOpen = module.id === openModuleId;
   const isActive = module.isActive;
@@ -278,6 +281,7 @@ const ModuleItem = ({
           {module.items.map((item, idx) => (
             <li key={item.id}>
               <AssetItem
+                setIsLock={setIsLock}
                 setIsSidebarOpen={setIsSidebarOpen}
                 isSidebarOpen={isSidebarOpen}
                 item={item}
@@ -285,21 +289,6 @@ const ModuleItem = ({
             </li>
           ))}
         </ul>
-
-        {/* Nếu có asset bị khóa (ngoài bài free đầu tiên) thì show overlay */}
-        {lockedItems?.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                alert("Đi tới trang thanh toán!");
-              }}
-              className="mt-3 px-4 py-2 bg-[#00839D] text-white rounded-lg font-medium shadow-md hover:bg-[#006d82] transition pointer-events-auto"
-            >
-              Mua khóa học
-            </button>
-          </div>
-        )}
       </motion.div>
     </div>
   );
@@ -312,6 +301,7 @@ const TopicItem = ({
   setOpenTopicId,
   setIsSidebarOpen,
   isSidebarOpen,
+  setIsLock,
 }) => {
   const isTopicOpen = topic.id === openTopicId;
 
@@ -391,6 +381,7 @@ const TopicItem = ({
         <div className="bg-white">
           {topic.modules.map((module) => (
             <ModuleItem
+              setIsLock={setIsLock}
               setIsSidebarOpen={setIsSidebarOpen}
               isSidebarOpen={isSidebarOpen}
               key={module.id}
@@ -410,6 +401,7 @@ export default function CourseSidebar({
   rawData,
   setIsSidebarOpen,
   isSidebarOpen,
+  setIsLock,
 }) {
   const stages = rawData?.stages || [];
   const assetCurrent = useCourseStore((state) => state.assetCurrent);
@@ -500,6 +492,7 @@ export default function CourseSidebar({
                 setOpenTopicId={setOpenTopicId}
                 setIsSidebarOpen={setIsSidebarOpen}
                 isSidebarOpen={isSidebarOpen}
+                setIsLock={setIsLock}
               />
             ))}
             {/* Mục Test đầu vào N1 (thêm layout motion để di chuyển mượt) */}

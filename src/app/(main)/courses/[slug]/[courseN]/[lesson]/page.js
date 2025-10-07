@@ -11,6 +11,7 @@ import { List, Menu, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import ReportTab from "./ReportTab";
 import AudioPlayer from "./AudioPlayer";
+import LockedVideoPlaceholder from "./LockedVideoPlaceholder";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CoursePage() {
@@ -49,6 +50,8 @@ export default function CoursePage() {
 
   // 1. STATE để quản lý tab hiện tại, mặc định là Lộ trình
   const [activeTab, setActiveTab] = useState(defaultTab);
+  const [isLock, setIsLock] = useState(true);
+
   useEffect(() => {
     setActiveTab(defaultTab);
   }, [defaultTab]);
@@ -211,19 +214,25 @@ export default function CoursePage() {
       <div className="flex gap-6 mx-auto max-w-7xl items-start pt-0 md:p-8 md:pt-8">
         {/* MAIN CONTENT */}
         <main className="w-full md:w-[700px] flex-shrink-0">
-          {assetCurrent && assetCurrent.url_sound ? (
-            // 1. HIỂN THỊ AUDIO PLAYER (nếu url_sound có giá trị)
-            <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg p-4">
-              {/* Component AudioPlayer cần được tạo riêng */}
-              <AudioPlayer audioUrl={assetCurrent?.url_sound} />
-            </div>
-          ) : (
-            // 2. HIỂN THỊ VIDEO PLAYER (nếu url_sound là null hoặc không có)
-            <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg">
-              {assetCurrent && assetCurrent.link === "#" && (
-                <VideoPlayer videoUrl={videoUrl} />
+          {isLock ? (
+            <>
+              {assetCurrent && assetCurrent.url_sound ? (
+                // 1. HIỂN THỊ AUDIO PLAYER (nếu url_sound có giá trị)
+                <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg p-4">
+                  {/* Component AudioPlayer cần được tạo riêng */}
+                  <AudioPlayer audioUrl={assetCurrent?.url_sound} />
+                </div>
+              ) : (
+                // 2. HIỂN THỊ VIDEO PLAYER (nếu url_sound là null hoặc không có)
+                <div className="bg-white shadow-xl md:mb-6 mb-3 md:rounded-lg">
+                  {assetCurrent && assetCurrent.link === "#" && (
+                    <VideoPlayer videoUrl={videoUrl} />
+                  )}
+                </div>
               )}
-            </div>
+            </>
+          ) : (
+            <LockedVideoPlaceholder />
           )}
 
           {/* KHỐI THANH ĐIỀU KHIỂN & TITLE */}
@@ -252,7 +261,7 @@ export default function CoursePage() {
 
         {/* Desktop Sidebar */}
         <div className="hidden md:block flex-grow h-full sticky top-8 overflow-y-auto bg-white rounded-lg shadow-xl p-4">
-          <CourseSidebar rawData={courses} />
+          <CourseSidebar setIsLock={setIsLock} rawData={courses} />
         </div>
 
         {/* Mobile Sidebar (Drawer) */}
@@ -282,6 +291,7 @@ export default function CoursePage() {
             </button>
           </div>
           <CourseSidebar
+            setIsLock={setIsLock}
             rawData={courses}
             setIsSidebarOpen={setIsSidebarOpen}
             isSidebarOpen={isSidebarOpen}

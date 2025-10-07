@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import DOMPurify from "isomorphic-dompurify";
-import { dataExams } from "@/data/exams";
+import dataExams from "@/data/exams";
 
 const circledNums = "①②③④⑤⑥⑦⑧⑨";
-
 const sanitizeHtml = (html) => DOMPurify.sanitize(html || "");
 
 const textFromHtml = (html) => {
@@ -15,7 +14,6 @@ const textFromHtml = (html) => {
   return (tmp.textContent || tmp.innerText || "").trim();
 };
 
-// Tìm đáp án đúng từ phần script
 function extractCorrectIndexFromScript(q) {
   const script = q?.script || "";
   const txt = textFromHtml(script);
@@ -37,16 +35,21 @@ function extractCorrectIndexFromScript(q) {
   return null;
 }
 
-// ===== Main Component =====
 export default function ExamPage() {
+  // --- state hooks (luôn ở đầu) ---
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [time, setTime] = useState(0);
   const [isHeaderBottom, setIsHeaderBottom] = useState(false);
 
-  const lesson = dataExams?.data?.lesson;
+  // chọn lesson (bộ đề), chọn examination (phần trong lesson)
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+  const [currentExamIndex, setCurrentExamIndex] = useState(0);
 
-  // --- Đồng hồ đếm thời gian ---
+  // dữ liệu từ file JSON
+  const lessons = dataExams?.data?.lesson || [];
+
+  // đồng hồ
   useEffect(() => {
     if (submitted) return;
     const timer = setInterval(() => setTime((t) => t + 1), 1000);
@@ -66,59 +69,46 @@ export default function ExamPage() {
     return `${h}:${m}:${s}`;
   };
 
-  // --- Lắng nghe cuộn để chuyển header xuống footer ---
+  // header sticky -> bottom khi cuộn
   useEffect(() => {
-    const handleScroll = () => {
-      const threshold = 250; // nếu cuộn quá 250px thì chuyển header thành footer sticky
-      setIsHeaderBottom(window.scrollY > threshold);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsHeaderBottom(window.scrollY > 250);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // --- Precompute đáp án đúng ---
+  // boundary checks
+  const currentLesson = lessons[currentLessonIndex];
+  const currentExam = currentLesson?.examinations?.[currentExamIndex];
+
+  // nếu không có lesson
+  if (!currentLesson) {
+    return <div className="p-6">Không tìm thấy dữ liệu bài thi.</div>;
+  }
+
+  // precompute đáp án đúng cho tất cả câu
   const correctIndexMap = useMemo(() => {
-    if (!lesson) return {};
     const map = {};
-    lesson.examinations.forEach((exam) =>
-      exam.mondais.forEach((mondai) =>
-        mondai.question_groups.forEach((group) =>
-          group.questions.forEach((q) => {
-            map[q.id] = extractCorrectIndexFromScript(q);
-          })
+    (lessons || []).forEach((lesson) =>
+      (lesson.examinations || []).forEach((exam) =>
+        (exam.mondais || []).forEach((mondai) =>
+          (mondai.question_groups || []).forEach((group) =>
+            (group.questions || []).forEach((q) => {
+              map[q.id] = extractCorrectIndexFromScript(q);
+            })
+          )
         )
       )
     );
     return map;
-  }, [lesson]);
+  }, [lessons]);
 
-  // --- Tính điểm ---
-  const summary = useMemo(() => {
-    if (!lesson) return { total: 0, correct: 0 };
-    let total = 0,
-      correct = 0;
-    lesson.examinations.forEach((exam) =>
-      exam.mondais.forEach((mondai) =>
-        mondai.question_groups.forEach((group) =>
-          group.questions.forEach((q) => {
-            total++;
-            const selected = answers[q.id];
-            const corr = correctIndexMap[q.id];
-            if (selected !== undefined && corr !== null && selected === corr)
-              correct++;
-          })
-        )
-      )
-    );
-    return { total, correct };
-  }, [answers, correctIndexMap, lesson]);
-
+  // chức năng chọn đáp án
   const handleSelect = (qid, index) => {
     if (submitted) return;
     setAnswers((p) => ({ ...p, [qid]: index }));
   };
 
+  // submit / reset
   const handleSubmit = () => setSubmitted(true);
   const handleReset = () => {
     setAnswers({});
@@ -126,12 +116,45 @@ export default function ExamPage() {
     setTime(0);
   };
 
-  if (!lesson)
-    return <div className="p-6">Không tìm thấy dữ liệu bài thi.</div>;
+  // khi đổi lesson: reset exam index + clear state (theo mong muốn trước đó)
+  const switchLesson = (idx) => {
+    setCurrentLessonIndex(idx);
+    setCurrentExamIndex(0);
+    setSubmitted(false);
+    setAnswers({});
+    setTime(0);
+  };
 
+  // tính số câu, số đã chọn, số đúng cho currentExam (hiển thị trong header)
+  const currentExamQuestionIds = useMemo(() => {
+    if (!currentExam) return [];
+    const ids = [];
+    (currentExam.mondais || []).forEach((mondai) =>
+      (mondai.question_groups || []).forEach((group) =>
+        (group.questions || []).forEach((q) => ids.push(q.id))
+      )
+    );
+    return ids;
+  }, [currentExam]);
+
+  const currentExamTotals = useMemo(() => {
+    const total = currentExamQuestionIds.length;
+    const selected = currentExamQuestionIds.filter(
+      (id) => answers[id] !== undefined
+    ).length;
+    const correct = currentExamQuestionIds.reduce((acc, id) => {
+      const sel = answers[id];
+      const corr = correctIndexMap[id];
+      if (sel !== undefined && corr !== null && sel === corr) return acc + 1;
+      return acc;
+    }, 0);
+    return { total, selected, correct };
+  }, [currentExamQuestionIds, answers, correctIndexMap]);
+
+  // --- RENDER ---
   return (
     <div className="min-h-screen bg-[#f3fafb]">
-      {/* ============ HEADER (fixed/sticky) ============ */}
+      {/* HEADER */}
       <div
         className={`transition-all duration-300 ${
           isHeaderBottom
@@ -139,202 +162,230 @@ export default function ExamPage() {
             : "sticky top-0 bg-white border-b z-20 shadow-sm"
         }`}
       >
-        <div className="max-w-5xl mx-auto px-6 py-3">
-          {/* flex-nowrap on md+, wrap on small screens */}
-          <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-            {/* Title (flex-1, min-w-0 để truncate) */}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-lg md:text-xl font-semibold text-gray-800 truncate">
-                {lesson.name}
-              </h1>
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            {/* Left: Lesson chooser */}
+            <div className="flex items-center gap-3 overflow-x-auto pb-1">
+              {lessons.map((lesson, idx) => (
+                <button
+                  key={lesson.id || idx}
+                  onClick={() => switchLesson(idx)}
+                  // Đoạn CSS đã được tối ưu và không bị chìm:
+                  className={`cursor-pointer  text-indigo-700 border border-indigo-400 hover:bg-indigo-50 hover:border-indigo-500 shadow-sm  flex-shrink-0 px-3 py-1.5 rounded-md text-sm font-medium transition ${
+                    idx === currentLessonIndex &&
+                    "bg-red-600 text-red-600 border-red-600 shadow-md"
+                  }`}
+                >
+                  {lesson.name || `Bài ${idx + 1}`}
+                </button>
+              ))}
             </div>
 
-            {/* Controls */}
-            <div className="flex items-center gap-3 flex-none">
-              <div className="text-sm text-gray-500 whitespace-nowrap">
-                Tổng câu: <strong>{summary.total}</strong>
+            {/* Right: counters + submit */}
+            <div className="flex items-center gap-3">
+              <div className="text-sm text-gray-600 whitespace-nowrap">
+                Tổng câu: <strong>{currentExamTotals.total}</strong>
               </div>
-              <div className="text-sm text-gray-500 whitespace-nowrap">
-                Đã chọn: <strong>{Object.keys(answers).length}</strong>
+              <div className="text-sm text-gray-600 whitespace-nowrap">
+                Đã chọn: <strong>{currentExamTotals.selected}</strong>
               </div>
-
-              <div className="flex items-center text-sm text-gray-700 font-medium whitespace-nowrap">
-                <svg
-                  className="w-4 h-4 mr-1 text-gray-600"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 7V12L15 14"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span>{formatTime(time)}</span>
+              <div className="text-sm text-gray-700 font-medium whitespace-nowrap">
+                ⏱ {formatTime(time)}
               </div>
 
-              {/* BUTTON: đảm bảo min-w để không bị cắt */}
               {!submitted ? (
                 <button
                   onClick={handleSubmit}
-                  className="cursor-pointer ml-2 flex-none bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition duration-300 ease-in-out min-w-[140px]"
+                  className="ml-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow"
                 >
                   Nộp bài
                 </button>
               ) : (
                 <button
                   onClick={handleReset}
-                  className="cursor-pointer ml-2 flex-none bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium text-base px-6 py-3 rounded-xl shadow-sm hover:shadow-md transition duration-300 ease-in-out min-w-[140px]"
+                  className="ml-2 bg-white border border-gray-300 text-gray-700 font-medium text-sm px-4 py-2 rounded-lg shadow-sm"
                 >
                   Làm lại
                 </button>
               )}
             </div>
           </div>
+
+          {/* --- Examination tabs for current lesson --- */}
+          <div className="mt-3">
+            <div className="flex gap-2 overflow-x-auto py-1">
+              {(currentLesson.examinations || []).map((exam, eIdx) => (
+                <button
+                  key={exam.id}
+                  onClick={() => {
+                    setCurrentExamIndex(eIdx);
+                    // khi đổi exam trong cùng lesson, giữ answers; nếu muốn clear, uncomment dòng dưới
+                    // setAnswers({});
+                    setSubmitted(false);
+                  }}
+                  className={`flex-shrink-0 px-3 py-1 rounded-md text-sm font-medium transition whitespace-nowrap ${
+                    eIdx === currentExamIndex
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="mr-2">{exam.name}</span>
+                  {exam.audio ? (
+                    <span className="inline-block text-xs text-white/80 bg-black/10 rounded px-1">
+                      🔊
+                    </span>
+                  ) : null}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Audio cho exam đã chọn */}
+          {currentExam?.audio ? (
+            <div className="mt-3">
+              <audio
+                controls
+                src={currentExam.audio}
+                className="w-full rounded-md border border-gray-200"
+              />
+            </div>
+          ) : null}
         </div>
       </div>
 
-      {/* ============ BODY ============ */}
-      <div className="max-w-5xl mx-auto p-6 space-y-6">
-        {lesson.examinations.map((exam) => (
-          <section key={exam.id}>
-            {exam.mondais.map((mondai) => (
+      {/* BODY: chỉ hiển thị currentExam */}
+      <div className="max-w-6xl mx-auto p-6 space-y-6">
+        {currentExam ? (
+          currentExam.mondais.map((mondai) => (
+            <div
+              key={mondai.id}
+              className="bg-white rounded-xl shadow-sm mb-6 p-5 border border-gray-100"
+            >
               <div
-                key={mondai.id}
-                className="bg-white rounded-xl shadow-sm mb-6 p-5 border border-gray-100"
-              >
-                <div
-                  className="text-base font-medium mb-4 text-gray-800"
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(mondai.name),
-                  }}
-                />
+                className="text-base font-medium mb-4 text-gray-800"
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(mondai.name),
+                }}
+              />
 
-                {mondai.question_groups.map((group) => (
-                  <div key={group.id} className="space-y-5">
-                    {group.questions.map((q, idx) => {
-                      const selected = answers[q.id];
-                      const correctIdx = correctIndexMap[q.id];
-                      const isCorrect =
-                        submitted &&
-                        selected !== undefined &&
-                        selected === correctIdx;
-                      const isWrong =
-                        submitted &&
-                        selected !== undefined &&
-                        selected !== correctIdx;
+              {(mondai.question_groups || []).map((group) => (
+                <div key={group.id} className="space-y-5">
+                  {(group.questions || []).map((q, qIdx) => {
+                    const selected = answers[q.id];
+                    const correctIdx = correctIndexMap[q.id];
+                    const isCorrect =
+                      submitted &&
+                      selected !== undefined &&
+                      selected === correctIdx;
+                    const isWrong =
+                      submitted &&
+                      selected !== undefined &&
+                      selected !== correctIdx;
 
-                      return (
-                        <div
-                          key={q.id}
-                          className={`rounded-lg border ${
-                            isCorrect
-                              ? "border-green-400 bg-green-50"
-                              : isWrong
-                              ? "border-red-400 bg-red-50"
-                              : "border-gray-200 bg-gray-50 hover:bg-gray-100 transition"
-                          } p-4`}
-                        >
-                          <div className="flex items-start gap-3 mb-3">
-                            <div className="w-8 h-8 flex items-center justify-center bg-teal-500 text-white text-sm font-semibold rounded-full shrink-0">
-                              {idx + 1}
+                    return (
+                      <div
+                        key={q.id}
+                        className={`rounded-lg border ${
+                          isCorrect
+                            ? "border-green-400 bg-green-50"
+                            : isWrong
+                            ? "border-red-400 bg-red-50"
+                            : "border-gray-200 bg-gray-50 hover:bg-gray-100 transition"
+                        } p-4`}
+                      >
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className="w-8 h-8 flex items-center justify-center bg-teal-500 text-white text-sm font-semibold rounded-full shrink-0">
+                            {qIdx + 1}
+                          </div>
+                          <div
+                            className="text-gray-800"
+                            dangerouslySetInnerHTML={{
+                              __html: sanitizeHtml(q.name),
+                            }}
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          {(q.answers || []).map((a, i) => {
+                            const isSelected = selected === i;
+                            const isAnswerCorrect =
+                              submitted && i === correctIdx;
+                            const isAnswerWrong =
+                              submitted &&
+                              i === selected &&
+                              selected !== correctIdx;
+
+                            return (
+                              <label
+                                key={a.id}
+                                className={`block cursor-pointer rounded-md border p-3 transition-all ${
+                                  isAnswerCorrect
+                                    ? "bg-green-100 border-green-400"
+                                    : isAnswerWrong
+                                    ? "bg-red-100 border-red-400"
+                                    : isSelected
+                                    ? "border-teal-400 bg-teal-50"
+                                    : "border-gray-200 hover:border-teal-300"
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  className="mr-2"
+                                  name={`q_${q.id}`}
+                                  checked={selected === i}
+                                  disabled={submitted}
+                                  onChange={() => handleSelect(q.id, i)}
+                                />
+                                <span
+                                  dangerouslySetInnerHTML={{
+                                    __html: sanitizeHtml(a.name),
+                                  }}
+                                />
+                              </label>
+                            );
+                          })}
+                        </div>
+
+                        {/* Hiển thị đáp án đúng + lời giải khi đã nộp */}
+                        {submitted && (
+                          <div className="mt-3 text-sm text-gray-700">
+                            <div className="mb-2">
+                              <strong>Đáp án đúng: </strong>
+                              {correctIdx !== null &&
+                              q.answers?.[correctIdx] ? (
+                                <span
+                                  dangerouslySetInnerHTML={{
+                                    __html: sanitizeHtml(
+                                      q.answers[correctIdx].name
+                                    ),
+                                  }}
+                                />
+                              ) : (
+                                <span className="text-gray-500">Không rõ</span>
+                              )}
                             </div>
+
                             <div
-                              className="text-gray-800"
+                              className="bg-gray-100 rounded p-2"
                               dangerouslySetInnerHTML={{
-                                __html: sanitizeHtml(q.name),
+                                __html: sanitizeHtml(
+                                  q.script ||
+                                    "<i>Không có lời giải chi tiết.</i>"
+                                ),
                               }}
                             />
                           </div>
-
-                          <div className="space-y-2">
-                            {q.answers.map((a, i) => {
-                              const isSelected = selected === i;
-                              const isAnswerCorrect =
-                                submitted && i === correctIdx;
-                              const isAnswerWrong =
-                                submitted &&
-                                i === selected &&
-                                selected !== correctIdx;
-
-                              return (
-                                <label
-                                  key={a.id}
-                                  className={`block cursor-pointer rounded-md border p-3 transition-all ${
-                                    isAnswerCorrect
-                                      ? "bg-green-100 border-green-400"
-                                      : isAnswerWrong
-                                      ? "bg-red-100 border-red-400"
-                                      : isSelected
-                                      ? "border-teal-400 bg-teal-50"
-                                      : "border-gray-200 hover:border-teal-300"
-                                  }`}
-                                >
-                                  <input
-                                    type="radio"
-                                    className="mr-2"
-                                    name={`q_${q.id}`}
-                                    checked={selected === i}
-                                    disabled={submitted}
-                                    onChange={() => handleSelect(q.id, i)}
-                                  />
-                                  <span
-                                    dangerouslySetInnerHTML={{
-                                      __html: sanitizeHtml(a.name),
-                                    }}
-                                  />
-                                </label>
-                              );
-                            })}
-                          </div>
-
-                          {submitted && (
-                            <div className="mt-3 text-sm text-gray-700">
-                              <div className="mb-2">
-                                <strong>Đáp án đúng: </strong>
-                                {correctIdx !== null &&
-                                q.answers[correctIdx] ? (
-                                  <span
-                                    dangerouslySetInnerHTML={{
-                                      __html: sanitizeHtml(
-                                        q.answers[correctIdx].name
-                                      ),
-                                    }}
-                                  />
-                                ) : (
-                                  "Không rõ"
-                                )}
-                              </div>
-                              <div
-                                className="bg-gray-100 rounded p-2"
-                                dangerouslySetInnerHTML={{
-                                  __html: sanitizeHtml(
-                                    q.script ||
-                                      "<i>Không có lời giải chi tiết.</i>"
-                                  ),
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </section>
-        ))}
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          <div>Không có phần thi được chọn.</div>
+        )}
       </div>
     </div>
   );
