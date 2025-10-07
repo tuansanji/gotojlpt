@@ -171,9 +171,9 @@ export default function ExamPage() {
                   key={lesson.id || idx}
                   onClick={() => switchLesson(idx)}
                   // Đoạn CSS đã được tối ưu và không bị chìm:
-                  className={`cursor-pointer  text-indigo-700 border border-indigo-400 hover:bg-indigo-50 hover:border-indigo-500 shadow-sm  flex-shrink-0 px-3 py-1.5 rounded-md text-sm font-medium transition ${
+                  className={`cursor-pointer  border  hover:bg-indigo-50 hover:border-indigo-500 shadow-sm  flex-shrink-0 px-3 py-1.5 rounded-md text-sm font-medium transition ${
                     idx === currentLessonIndex &&
-                    "bg-red-600 text-red-600 border-red-600 shadow-md"
+                    " text-red-600 border-red-600 shadow-md"
                   }`}
                 >
                   {lesson.name || `Bài ${idx + 1}`}
