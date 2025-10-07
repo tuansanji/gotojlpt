@@ -79,12 +79,6 @@ export default function ExamPage() {
   // boundary checks
   const currentLesson = lessons[currentLessonIndex];
   const currentExam = currentLesson?.examinations?.[currentExamIndex];
-
-  // nếu không có lesson
-  if (!currentLesson) {
-    return <div className="p-6">Không tìm thấy dữ liệu bài thi.</div>;
-  }
-
   // precompute đáp án đúng cho tất cả câu
   const correctIndexMap = useMemo(() => {
     const map = {};
@@ -101,30 +95,6 @@ export default function ExamPage() {
     );
     return map;
   }, [lessons]);
-
-  // chức năng chọn đáp án
-  const handleSelect = (qid, index) => {
-    if (submitted) return;
-    setAnswers((p) => ({ ...p, [qid]: index }));
-  };
-
-  // submit / reset
-  const handleSubmit = () => setSubmitted(true);
-  const handleReset = () => {
-    setAnswers({});
-    setSubmitted(false);
-    setTime(0);
-  };
-
-  // khi đổi lesson: reset exam index + clear state (theo mong muốn trước đó)
-  const switchLesson = (idx) => {
-    setCurrentLessonIndex(idx);
-    setCurrentExamIndex(0);
-    setSubmitted(false);
-    setAnswers({});
-    setTime(0);
-  };
-
   // tính số câu, số đã chọn, số đúng cho currentExam (hiển thị trong header)
   const currentExamQuestionIds = useMemo(() => {
     if (!currentExam) return [];
@@ -151,6 +121,34 @@ export default function ExamPage() {
     return { total, selected, correct };
   }, [currentExamQuestionIds, answers, correctIndexMap]);
 
+  // nếu không có lesson
+  if (!currentLesson) {
+    return <div className="p-6">Không tìm thấy dữ liệu bài thi.</div>;
+  }
+
+  // chức năng chọn đáp án
+  const handleSelect = (qid, index) => {
+    if (submitted) return;
+    setAnswers((p) => ({ ...p, [qid]: index }));
+  };
+
+  // submit / reset
+  const handleSubmit = () => setSubmitted(true);
+  const handleReset = () => {
+    setAnswers({});
+    setSubmitted(false);
+    setTime(0);
+  };
+
+  // khi đổi lesson: reset exam index + clear state (theo mong muốn trước đó)
+  const switchLesson = (idx) => {
+    setCurrentLessonIndex(idx);
+    setCurrentExamIndex(0);
+    setSubmitted(false);
+    setAnswers({});
+    setTime(0);
+  };
+
   // --- RENDER ---
   return (
     <div className="min-h-screen bg-[#f3fafb]">
@@ -171,7 +169,7 @@ export default function ExamPage() {
                   key={lesson.id || idx}
                   onClick={() => switchLesson(idx)}
                   // Đoạn CSS đã được tối ưu và không bị chìm:
-                  className={`cursor-pointer  border  hover:bg-indigo-50 hover:border-indigo-500 shadow-sm  flex-shrink-0 px-3 py-1.5 rounded-md text-sm font-medium transition ${
+                  className={`cursor-pointer  border border-indigo-400 hover:bg-indigo-50 hover:border-indigo-500 shadow-sm  flex-shrink-0 px-3 py-1.5 rounded-md text-sm font-medium transition ${
                     idx === currentLessonIndex &&
                     " text-red-600 border-red-600 shadow-md"
                   }`}

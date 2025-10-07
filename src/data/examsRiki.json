@@ -1,0 +1,1299 @@
+{
+  "exams": [
+    {
+      "id": 1653,
+      "type": 6,
+      "name": "Đề N3 12-2023",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4149,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4150,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4151,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1654,
+      "type": 6,
+      "name": "Đề N3 07-2023",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4152,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4153,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4154,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1656,
+      "type": 6,
+      "name": "Đề N3 07-2022",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4158,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4159,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4160,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1665,
+      "type": 6,
+      "name": "Đề N3 07-2021",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4184,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4185,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4186,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1667,
+      "type": 6,
+      "name": "Đề N3 12-2022",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4188,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4189,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4190,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1685,
+      "type": 6,
+      "name": "Đề N3 12-2021",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4223,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4224,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4225,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1704,
+      "type": 6,
+      "name": "Đề N2 12-2020",
+      "level_id": 4,
+      "exam": 0,
+      "time": 140,
+      "total_point": "183.00",
+      "parts": [
+        {
+          "id": 4264,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4265,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4266,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1713,
+      "type": 6,
+      "name": "Đề N2 07-2021",
+      "level_id": 4,
+      "exam": 0,
+      "time": 144,
+      "total_point": "183.00",
+      "parts": [
+        {
+          "id": 4284,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4285,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4286,
+          "name": "ちょうかい",
+          "time": 44
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1714,
+      "type": 6,
+      "name": "Đề N2 12-2021",
+      "level_id": 4,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4288,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4289,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4290,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1717,
+      "type": 6,
+      "name": "Đề N2 07-2022",
+      "level_id": 4,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4296,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4297,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4298,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1718,
+      "type": 6,
+      "name": "Đề N2 12-2022",
+      "level_id": 4,
+      "exam": 0,
+      "time": 147,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4299,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4300,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4301,
+          "name": "ちょうかい",
+          "time": 47
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1720,
+      "type": 6,
+      "name": "Đề N2 07-2023",
+      "level_id": 4,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4306,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4307,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4308,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1724,
+      "type": 6,
+      "name": "Đề N1 12-2020",
+      "level_id": 5,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4316,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4317,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4318,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1820,
+      "type": 6,
+      "name": "Đề N1 12-2023",
+      "level_id": 5,
+      "exam": 0,
+      "time": 165,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4512,
+          "name": "言語知識",
+          "time": 110
+        },
+        {
+          "id": 4513,
+          "name": "聴解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1824,
+      "type": 6,
+      "name": "Đề N1 12-2022",
+      "level_id": 5,
+      "exam": 0,
+      "time": 165,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4520,
+          "name": "言語知識",
+          "time": 110
+        },
+        {
+          "id": 4521,
+          "name": "聴解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1827,
+      "type": 6,
+      "name": "Đề N1 07-2022",
+      "level_id": 5,
+      "exam": 0,
+      "time": 160,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4525,
+          "name": "言語知識",
+          "time": 110
+        },
+        {
+          "id": 4526,
+          "name": "聴解",
+          "time": 50
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1828,
+      "type": 6,
+      "name": "Đề N1 12-2021",
+      "level_id": 5,
+      "exam": 0,
+      "time": 165,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4527,
+          "name": "言語知識",
+          "time": 110
+        },
+        {
+          "id": 4528,
+          "name": "聴解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1829,
+      "type": 6,
+      "name": "Đề N1 07-2021",
+      "level_id": 5,
+      "exam": 0,
+      "time": 165,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4529,
+          "name": "言語知識",
+          "time": 110
+        },
+        {
+          "id": 4530,
+          "name": "聴解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1836,
+      "type": 6,
+      "name": "Đề N2 07-2024",
+      "level_id": 4,
+      "exam": 0,
+      "time": 150,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4543,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4544,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4545,
+          "name": "ちょうかい",
+          "time": 50
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 1837,
+      "type": 6,
+      "name": "Đề N2 12-2023",
+      "level_id": 4,
+      "exam": 0,
+      "time": 150,
+      "total_point": "179.00",
+      "parts": [
+        {
+          "id": 4546,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 4547,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 4548,
+          "name": "ちょうかい",
+          "time": 50
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2002,
+      "type": 6,
+      "name": "Đề N3 12-2024",
+      "level_id": 3,
+      "exam": 0,
+      "time": 100,
+      "total_point": "120.00",
+      "parts": [
+        {
+          "id": 4867,
+          "name": "文字・語彙",
+          "time": 30
+        },
+        {
+          "id": 4868,
+          "name": "文法・読解",
+          "time": 70
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2003,
+      "type": 6,
+      "name": "Đề N2  12-2024",
+      "level_id": 4,
+      "exam": 0,
+      "time": 105,
+      "total_point": "120.00",
+      "parts": [
+        {
+          "id": 4873,
+          "name": "言語知識（文字・語彙）読解",
+          "time": 105
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2004,
+      "type": 6,
+      "name": "Đề N1 12-2024",
+      "level_id": 5,
+      "exam": 0,
+      "time": 110,
+      "total_point": "120.00",
+      "parts": [
+        {
+          "id": 4940,
+          "name": "言語知識・読解",
+          "time": 110
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2015,
+      "type": 6,
+      "name": "Đề N4 12-2024",
+      "level_id": 2,
+      "exam": 0,
+      "time": 80,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4888,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 4889,
+          "name": "文法・読解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2019,
+      "type": 6,
+      "name": "Đề N5 07-2024",
+      "level_id": 1,
+      "exam": 0,
+      "time": 90,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4894,
+          "name": "もじ・ごい",
+          "time": 20
+        },
+        {
+          "id": 4895,
+          "name": "ぶんぽう・どっかい",
+          "time": 40
+        },
+        {
+          "id": 4896,
+          "name": "ちょうかい",
+          "time": 30
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2020,
+      "type": 6,
+      "name": "Đề N4  07-2024",
+      "level_id": 2,
+      "exam": 0,
+      "time": 118,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4897,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 4898,
+          "name": "文法・読解",
+          "time": 55
+        },
+        {
+          "id": 4947,
+          "name": "ちょうかい",
+          "time": 38
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2023,
+      "type": 6,
+      "name": "Đề N4  07-2023",
+      "level_id": 2,
+      "exam": 0,
+      "time": 80,
+      "total_point": "120.00",
+      "parts": [
+        {
+          "id": 4902,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 4903,
+          "name": "文法・読解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2032,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N3 Đợt 1",
+      "level_id": 3,
+      "exam": 1,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4918,
+          "name": "言語知識(文字・語彙)",
+          "time": 30
+        },
+        {
+          "id": 4919,
+          "name": "言語知識（文法）・読解",
+          "time": 70
+        },
+        {
+          "id": 4920,
+          "name": "聴解",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2033,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N1 Đợt 1",
+      "level_id": 5,
+      "exam": 1,
+      "time": 165,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4921,
+          "name": "言語知識・読解",
+          "time": 110
+        },
+        {
+          "id": 4922,
+          "name": "聴解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2035,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N5 Đợt 1",
+      "level_id": 1,
+      "exam": 1,
+      "time": 95,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4924,
+          "name": "もじ・ごい",
+          "time": 20
+        },
+        {
+          "id": 4925,
+          "name": "ぶんぽう・どっかい",
+          "time": 40
+        },
+        {
+          "id": 4926,
+          "name": "ちょうかい",
+          "time": 35
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2036,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N4 Đợt 1",
+      "level_id": 2,
+      "exam": 1,
+      "time": 115,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4927,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 4928,
+          "name": "ぶんぽう・どっかい",
+          "time": 55
+        },
+        {
+          "id": 4929,
+          "name": "ちょうかい",
+          "time": 35
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2037,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N2 Đợt 1",
+      "level_id": 4,
+      "exam": 1,
+      "time": 155,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4930,
+          "name": "言語知識（文字・語彙）読解",
+          "time": 105
+        },
+        {
+          "id": 4931,
+          "name": "聴解",
+          "time": 50
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2045,
+      "type": 6,
+      "name": "Đề N1 07-2024",
+      "level_id": 5,
+      "exam": 0,
+      "time": 165,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4941,
+          "name": "言語知識・読解",
+          "time": 110
+        },
+        {
+          "id": 4942,
+          "name": "聴解",
+          "time": 55
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2046,
+      "type": 6,
+      "name": "Đề N3 07-2024",
+      "level_id": 3,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4944,
+          "name": "言語知識(文字・語彙)",
+          "time": 30
+        },
+        {
+          "id": 4945,
+          "name": "言語知識（文法）・読解",
+          "time": 70
+        },
+        {
+          "id": 4946,
+          "name": "聴解",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2054,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N3 Đợt 2",
+      "level_id": 3,
+      "exam": 2,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4956,
+          "name": "言語知識(文字・語彙)",
+          "time": 30
+        },
+        {
+          "id": 4957,
+          "name": "言語知識（文法）・読解",
+          "time": 70
+        },
+        {
+          "id": 4958,
+          "name": "聴解",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2056,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N5 Đợt 2",
+      "level_id": 1,
+      "exam": 2,
+      "time": 90,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4960,
+          "name": "もじ・ごい",
+          "time": 20
+        },
+        {
+          "id": 4961,
+          "name": "ぶんぽう・どっかい",
+          "time": 40
+        },
+        {
+          "id": 4962,
+          "name": "ちょうかい",
+          "time": 30
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2057,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N2 Đợt 2",
+      "level_id": 4,
+      "exam": 2,
+      "time": 155,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4964,
+          "name": "言語知識（文字・語彙）読解",
+          "time": 105
+        },
+        {
+          "id": 4965,
+          "name": "聴解",
+          "time": 50
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2058,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N4 Đợt 2",
+      "level_id": 2,
+      "exam": 2,
+      "time": 115,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4967,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 4968,
+          "name": "ぶんぽう・どっかい",
+          "time": 55
+        },
+        {
+          "id": 4969,
+          "name": "ちょうかい",
+          "time": 35
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2059,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N1 Đợt 2",
+      "level_id": 5,
+      "exam": 2,
+      "time": 166,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4970,
+          "name": "言語知識・読解",
+          "time": 110
+        },
+        {
+          "id": 4971,
+          "name": "聴解",
+          "time": 56
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2068,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N2 Đợt 3",
+      "level_id": 4,
+      "exam": 3,
+      "time": 155,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4980,
+          "name": "言語知識（文字・語彙）読解",
+          "time": 105
+        },
+        {
+          "id": 4981,
+          "name": "聴解",
+          "time": 50
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2069,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N4 Đợt 3",
+      "level_id": 2,
+      "exam": 3,
+      "time": 116,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4982,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 4983,
+          "name": "ぶんぽう・どっかい",
+          "time": 55
+        },
+        {
+          "id": 4984,
+          "name": "ちょうかい",
+          "time": 36
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2070,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N1 Đợt 3",
+      "level_id": 5,
+      "exam": 3,
+      "time": 166,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4988,
+          "name": "言語知識・読解",
+          "time": 110
+        },
+        {
+          "id": 4989,
+          "name": "聴解",
+          "time": 56
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2071,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N5 Đợt 3",
+      "level_id": 1,
+      "exam": 3,
+      "time": 90,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4990,
+          "name": "もじ・ごい",
+          "time": 20
+        },
+        {
+          "id": 4991,
+          "name": "ぶんぽう・どっかい",
+          "time": 40
+        },
+        {
+          "id": 4992,
+          "name": "ちょうかい",
+          "time": 30
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2072,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N3 Đợt 3",
+      "level_id": 3,
+      "exam": 3,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 4985,
+          "name": "言語知識(文字・語彙)",
+          "time": 30
+        },
+        {
+          "id": 4986,
+          "name": "言語知識（文法）・読解",
+          "time": 70
+        },
+        {
+          "id": 4987,
+          "name": "聴解",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2081,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N1 Đợt 4",
+      "level_id": 5,
+      "exam": 4,
+      "time": 166,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 5022,
+          "name": "言語知識・読解",
+          "time": 110
+        },
+        {
+          "id": 5023,
+          "name": "聴解",
+          "time": 56
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2082,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N2 Đợt 4",
+      "level_id": 4,
+      "exam": 4,
+      "time": 152,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 5024,
+          "name": "言語知識（文字・語彙）読解",
+          "time": 105
+        },
+        {
+          "id": 5025,
+          "name": "聴解",
+          "time": 47
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2083,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N3 Đợt 4",
+      "level_id": 3,
+      "exam": 4,
+      "time": 135,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 5004,
+          "name": "言語知識(文字・語彙)",
+          "time": 30
+        },
+        {
+          "id": 5005,
+          "name": "言語知識（文法）・読解",
+          "time": 70
+        },
+        {
+          "id": 5006,
+          "name": "聴解",
+          "time": 35
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2084,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N4 Đợt 4",
+      "level_id": 2,
+      "exam": 4,
+      "time": 112,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 5011,
+          "name": "げんごちしき（もじ・ごい）",
+          "time": 25
+        },
+        {
+          "id": 5012,
+          "name": "ぶんぽう・どっかい",
+          "time": 55
+        },
+        {
+          "id": 5013,
+          "name": "ちょうかい",
+          "time": 32
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2085,
+      "type": 6,
+      "name": "Đại hội thi thử JLPT mùa 9 - N5 Đợt 4",
+      "level_id": 1,
+      "exam": 4,
+      "time": 90,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 5001,
+          "name": "もじ・ごい",
+          "time": 20
+        },
+        {
+          "id": 5002,
+          "name": "ぶんぽう・どっかい",
+          "time": 40
+        },
+        {
+          "id": 5003,
+          "name": "ちょうかい",
+          "time": 30
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    },
+    {
+      "id": 2087,
+      "type": 6,
+      "name": "Đề N1 7-2023",
+      "level_id": 5,
+      "exam": 0,
+      "time": 140,
+      "total_point": "180.00",
+      "parts": [
+        {
+          "id": 5008,
+          "name": "もじごい",
+          "time": 30
+        },
+        {
+          "id": 5009,
+          "name": "ぶんぽうーどっかい",
+          "time": 70
+        },
+        {
+          "id": 5010,
+          "name": "ちょうかい",
+          "time": 40
+        }
+      ],
+      "open_exam": true,
+      "exceeded_max_attempts": false
+    }
+  ]
+}

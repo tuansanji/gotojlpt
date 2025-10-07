@@ -33,62 +33,64 @@ const menuItems = [
     ],
   },
   {
-    title: "Thi Thử",
+    title: "Thi Thử JLPT",
+    link: "/exams",
+
     // Link ở đây sẽ bị bỏ qua vì có submenu, thẻ cha sẽ là <span>
-    submenu: [
-      {
-        title: "Dũng Mori",
-        link: "/exams/dungmori",
-        submenu: [
-          {
-            title: "N1",
-            link: "/exams/dungmori/N1",
-          },
-          {
-            title: "N2",
-            link: "/exams/dungmori/N2",
-          },
-          {
-            title: "N3",
-            link: "/exams/dungmori/N3",
-          },
-          {
-            title: "N4",
-            link: "/exams/dungmori/N4",
-          },
-          {
-            title: "N5",
-            link: "/exams/dungmori/N5",
-          },
-        ],
-      },
-      {
-        title: "Riki",
-        link: "/exams/riki",
-        submenu: [
-          {
-            title: "N1",
-            link: "/exams/riki/N1",
-          },
-          {
-            title: "N2",
-            link: "/exams/riki/N2",
-          },
-          {
-            title: "N3",
-            link: "/exams/riki/N3",
-          },
-          {
-            title: "N4",
-            link: "/exams/riki/N4",
-          },
-          {
-            title: "N5",
-            link: "/exams/riki/N5",
-          },
-        ],
-      },
-    ],
+    // submenu: [
+    //   {
+    //     title: "Dũng Mori",
+    //     link: "/exams/dungmori",
+    //     submenu: [
+    //       {
+    //         title: "N1",
+    //         link: "/exams/dungmori/N1",
+    //       },
+    //       {
+    //         title: "N2",
+    //         link: "/exams/dungmori/N2",
+    //       },
+    //       {
+    //         title: "N3",
+    //         link: "/exams/dungmori/N3",
+    //       },
+    //       {
+    //         title: "N4",
+    //         link: "/exams/dungmori/N4",
+    //       },
+    //       {
+    //         title: "N5",
+    //         link: "/exams/dungmori/N5",
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     title: "Riki",
+    //     link: "/exams/riki",
+    //     submenu: [
+    //       {
+    //         title: "N1",
+    //         link: "/exams/riki/N1",
+    //       },
+    //       {
+    //         title: "N2",
+    //         link: "/exams/riki/N2",
+    //       },
+    //       {
+    //         title: "N3",
+    //         link: "/exams/riki/N3",
+    //       },
+    //       {
+    //         title: "N4",
+    //         link: "/exams/riki/N4",
+    //       },
+    //       {
+    //         title: "N5",
+    //         link: "/exams/riki/N5",
+    //       },
+    //     ],
+    //   },
+    // ],
   },
   { title: "Tài Liệu", link: "/tailieu" },
 
