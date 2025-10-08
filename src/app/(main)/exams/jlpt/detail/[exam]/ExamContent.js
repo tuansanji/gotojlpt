@@ -233,7 +233,8 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
   useEffect(() => {
     const onScroll = () => {
       if (typeof window !== "undefined") {
-        setIsHeaderBottom(window.scrollY > 250);
+        if (window.scrollY > 600) setIsHeaderBottom(true);
+        if (window.scrollY < 300) setIsHeaderBottom(false);
       }
     };
     if (typeof window !== "undefined") {
@@ -648,13 +649,14 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
       {isHeaderBottom && (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t z-50 shadow-lg transition-all duration-300">
           <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            {/* Left: Tên bài thi + Đồng hồ + Tên phần thi & Hoàn thành */}
-            <div className="flex items-center gap-4">
+            {/* 1. LEFT BLOCK: Tên bài thi + Đồng hồ + Thông tin Phần thi (flex-shrink-0 để cố định) */}
+            <div className="flex items-center gap-4 flex-shrink-0">
+              {" "}
+              {/* Thêm flex-shrink-0 */}
               {/* Tên Bài Thi Chính */}
-              <div className="text-base font-bold text-gray-800 whitespace-nowrap hidden sm:block">
+              <div className="text-[14px] font-bold text-gray-800 whitespace-nowrap hidden sm:block">
                 {examName}
               </div>
-
               {/* Đồng hồ */}
               <div
                 className={`text-sm font-medium whitespace-nowrap rounded-md p-2 shadow-inner ${
@@ -668,27 +670,42 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                   {formatTime(timeDisplay)}
                 </strong>
               </div>
-
-              {/* ⭐️ THÔNG TIN PHẦN THI HIỆN TẠI (Mới được thêm) */}
-              <div className="hidden md:flex flex-col text-xs text-gray-700">
-                <span className="font-semibold text-indigo-700">
-                  {currentPart?.name}
-                </span>
-                <span className="text-gray-500 mt-0.5">
-                  Hoàn thành:
-                  <strong className="text-indigo-600 ml-1">
-                    {currentPartTotals.selected}
-                  </strong>
-                  /
-                  <strong className="text-indigo-600">
-                    {currentPartTotals.total}
-                  </strong>
-                </span>
-              </div>
+              {/* ⭐️ THÔNG TIN PHẦN THI HIỆN TẠI (Chỉ hiển thị khi KHÔNG CÓ audio) */}
+              {/* Đã gộp và dọn dẹp khối thông tin phần thi bị lặp */}
+              {!currentPart?.audio && (
+                <div className="hidden md:flex flex-col text-xs text-gray-700">
+                  <span className="font-semibold text-indigo-700">
+                    {currentPart?.name}
+                  </span>
+                  <span className="text-gray-500 mt-0.5">
+                    Hoàn thành:
+                    <strong className="text-indigo-600 ml-1">
+                      {currentPartTotals.selected}
+                    </strong>
+                    /
+                    <strong className="text-indigo-600">
+                      {currentPartTotals.total}
+                    </strong>
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Right: Nút nộp bài + Nút Mở rộng */}
-            <div className="flex items-center gap-2">
+            {/* 2. CENTER BLOCK: AUDIO (Đã tách riêng để mở rộng tối đa không gian) */}
+            {currentPart?.audio && (
+              <div className="flex-1 mx-4 max-w-xl hidden lg:block">
+                {" "}
+                {/* flex-1 cho phép kéo dài, max-w-xl làm thanh audio dài ra */}
+                <audio
+                  controls
+                  src={currentPart.audio}
+                  className="w-full rounded-md h-10" /* w-full để chiếm hết không gian, h-10 (40px) để cố định chiều cao */
+                />
+              </div>
+            )}
+
+            {/* 3. RIGHT BLOCK: Nút nộp bài + Nút Mở rộng (flex-shrink-0 để cố định) */}
+            <div className="flex items-center gap-2 flex-shrink-0">
               {!submitted && !isPartTimeFinished ? (
                 <button
                   onClick={handleSubmitPart}
