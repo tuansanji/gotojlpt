@@ -593,11 +593,13 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
 
           {/* Audio (Chỉ hiển thị khi ở trạng thái Full) */}
           {currentPart?.audio ? (
-            <div className="mt-3">
+            <div className="mt-3 relative">
               <audio
-                controls
+                id="lesson-audio"
                 src={currentPart.audio}
-                className="w-full rounded-md border border-gray-200"
+                autoPlay
+                controls
+                className="w-full rounded-md border border-gray-200 pointer-events-none"
               />
             </div>
           ) : null}
