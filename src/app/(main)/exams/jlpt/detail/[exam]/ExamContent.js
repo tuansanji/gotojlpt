@@ -47,7 +47,7 @@ const ModalWrapper = ({ children, onClose }) => (
     <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm transform transition-all scale-100 animate-in fade-in duration-300">
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
+        className="cursor-pointer absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -465,24 +465,24 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
           </strong>
           câu.
         </p>
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-around gap-3">
           <button
             onClick={() => handleModalAction("view")}
-            className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-300 transition"
+            className="cursor-pointer bg-gray-200 text-[10px] md:text-[14px] text-gray-800 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-300 transition"
           >
             Quay lại (Xem kết quả)
           </button>
           {isNextPartAvailable ? (
             <button
               onClick={() => handleModalAction("next")}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:bg-green-700 transition"
+              className="cursor-pointer bg-green-600 text-[10px] md:text-[14px] text-white px-4 py-2 rounded-lg font-medium shadow-md hover:bg-green-700 transition"
             >
               Chuyển đến {examinations[nextPartIndex]?.name}
             </button>
           ) : (
             <button
               onClick={() => handleModalAction("view")}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:bg-indigo-700 transition"
+              className="cursor-pointer bg-indigo-600 text-[10px] md:text-[14px] text-white px-4 py-2 rounded-lg font-medium shadow-md hover:bg-indigo-700 transition"
             >
               Hoàn tất Bài thi
             </button>
@@ -512,11 +512,11 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
             {/* TOP BAR: Tên bài thi, Đồng hồ, Nộp bài */}
             <div className="flex items-center justify-between gap-3 flex-wrap">
               {/* Left: Tên bài thi */}
-              <div className="text-lg font-bold text-indigo-700 whitespace-nowrap">
+              <div className="text-sm md:text-lg font-bold text-indigo-700 ">
                 {examName} {isFullExam ? "(Full)" : "(Tùy chọn)"}
               </div>
               {/* Right: counters + submit */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 md:gap-7">
                 <div
                   className={`text-sm font-medium whitespace-nowrap rounded-md p-2 shadow-inner ${
                     timeRemaining <= 600 && maxTimeInSeconds > 0
@@ -532,17 +532,19 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                 <div className="text-sm text-gray-600 whitespace-nowrap">
                   Hoàn thành:
                   <strong className="text-indigo-600">
-                    {totalExamTotals.selected}
+                    {" "}
+                    {totalExamTotals.selected}{" "}
                   </strong>
                   /
                   <strong className="text-indigo-600">
+                    {" "}
                     {totalExamTotals.total}
                   </strong>
                 </div>
                 {!submitted && !isPartTimeFinished ? (
                   <button
                     onClick={handleSubmitPart}
-                    className={`text-white font-semibold text-sm px-4 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
+                    className={`cursor-pointer text-white font-semibold md:text-sm text-[10px] md:px-4 px-3 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
                   >
                     NỘP BÀI
                   </button>
@@ -567,7 +569,7 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                     key={part.id}
                     onClick={() => handleSwitchPart(index)}
                     disabled={!canNavigate && index > currentPartIndex}
-                    className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap border ${
+                    className={`cursor-pointer flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap border ${
                       isCurrent
                         ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
                         : isSubmitted
@@ -610,16 +612,17 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
               <div className="text-sm text-gray-600">
                 Đã làm:
                 <strong className="text-indigo-600">
-                  {currentPartTotals.selected}
+                  {" "}
+                  {currentPartTotals.selected}{" "}
                 </strong>
-                /
+                /{" "}
                 <strong className="text-indigo-600">
                   {currentPartTotals.total}
                 </strong>
               </div>
               <button
                 onClick={() => setShowQuestionList(!showQuestionList)}
-                className="flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition p-1 rounded-md"
+                className=" cursor-pointer flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition p-1 rounded-md"
               >
                 {showQuestionList ? "Thu gọn" : "Mở rộng"} (
                 {allQuestionIdsInCurrentPart.length} câu hỏi)
@@ -648,7 +651,7 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
       {/* ⭐️ HEADER 2: TRẠNG THÁI FIXED/COMPACT (KHI CUỘN XUỐNG) */}
       {isHeaderBottom && (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t z-50 shadow-lg transition-all duration-300">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="max-w-6xl gap-5 mx-auto px-4 py-3 flex items-center justify-between">
             {/* 1. LEFT BLOCK: Tên bài thi + Đồng hồ + Thông tin Phần thi (flex-shrink-0 để cố định) */}
             <div className="flex items-center gap-4 flex-shrink-0">
               {" "}
@@ -705,11 +708,11 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
             )}
 
             {/* 3. RIGHT BLOCK: Nút nộp bài + Nút Mở rộng (flex-shrink-0 để cố định) */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-6 flex-shrink-0">
               {!submitted && !isPartTimeFinished ? (
                 <button
                   onClick={handleSubmitPart}
-                  className={`text-white font-semibold text-sm px-4 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
+                  className={`cursor-pointer text-white font-semibold text-sm px-4 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
                 >
                   NỘP BÀI
                 </button>
@@ -722,16 +725,20 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
               {/* Nút Mở rộng */}
               <button
                 onClick={() => setShowQuestionList(!showQuestionList)}
-                className="flex items-center justify-center h-10 w-10 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full transition"
+                // CẬP NHẬT CSS: Thiết kế thành khối chữ nhật đứng (icon + text),
+                // dùng màu Teal, bo tròn mềm mại và bóng đổ nổi.
+                className="cursor-pointer flex flex-col items-center justify-center p-1 text-sm text-teal-700 bg-white hover:bg-teal-50 rounded-xl transition-all duration-300 shadow-lg border-2 border-teal-200 transform hover:scale-[1.03] active:scale-[0.98]"
                 title={
                   showQuestionList ? "Thu gọn danh sách" : "Mở rộng danh sách"
                 }
+                // Thêm chiều rộng tối thiểu để chứa chữ 'Câu hỏi'
+                style={{ minWidth: "50px" }}
               >
+                {/* Icon Lưới (Grid) */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 transform transition-transform ${
-                    showQuestionList ? "rotate-180" : ""
-                  }`}
+                  // Icon màu Teal, kích thước chuẩn
+                  className="h-4 w-4 text-teal-600 transition-transform duration-300"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -740,9 +747,12 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                   />
                 </svg>
+
+                {/* Chữ "Câu hỏi" bên dưới icon */}
+                <span className="font-semibold mt-1 text-[10px]">Câu hỏi</span>
               </button>
             </div>
           </div>
