@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import DOMPurify from "isomorphic-dompurify";
+import FixedAudioPlayer from "./AudioPlayer";
 
 // --- HÀM TIỆN ÍCH ---
 const circledNums = "①②③④⑤⑥⑦⑧⑨";
@@ -506,147 +507,154 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
     <div className="min-h-screen bg-[#f3fafb]">
       {showSubmitModal && <PartSubmitModal />}
       {/* HEADER */}
-      {!isHeaderBottom && (
-        <div className="sticky top-0 bg-white border-b z-20 shadow-sm transition-all duration-300">
-          <div className="max-w-6xl mx-auto px-4 py-3">
-            {/* TOP BAR: Tên bài thi, Đồng hồ, Nộp bài */}
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              {/* Left: Tên bài thi */}
-              <div className="text-sm md:text-lg font-bold text-indigo-700 ">
-                {examName} {isFullExam ? "(Full)" : "(Tùy chọn)"}
-              </div>
-              {/* Right: counters + submit */}
-              <div className="flex items-center gap-4 md:gap-7">
-                <div
-                  className={`text-sm font-medium whitespace-nowrap rounded-md p-2 shadow-inner ${
-                    timeRemaining <= 600 && maxTimeInSeconds > 0
-                      ? "bg-red-50 text-red-600"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {maxTimeInSeconds > 0 ? "⏱ Còn lại: " : "⏳ Thời gian: "}
-                  <strong className="tracking-wider">
-                    {formatTime(timeDisplay)}
-                  </strong>
-                </div>
-                <div className="text-sm text-gray-600 whitespace-nowrap">
-                  Hoàn thành:
-                  <strong className="text-indigo-600">
-                    {" "}
-                    {totalExamTotals.selected}{" "}
-                  </strong>
-                  /
-                  <strong className="text-indigo-600">
-                    {" "}
-                    {totalExamTotals.total}
-                  </strong>
-                </div>
-                {!submitted && !isPartTimeFinished ? (
-                  <button
-                    onClick={handleSubmitPart}
-                    className={`cursor-pointer text-white font-semibold md:text-sm text-[10px] md:px-4 px-3 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
-                  >
-                    NỘP BÀI
-                  </button>
-                ) : (
-                  <div className="text-sm text-green-600 font-bold whitespace-nowrap rounded-lg p-2 bg-green-50 shadow-inner">
-                    ✅ Đã nộp
-                  </div>
-                )}
-              </div>
+
+      <div
+        className={`sticky top-0 bg-white border-b z-20 shadow-sm transition-all duration-300 ${
+          isHeaderBottom && "h-0"
+        }`}
+      >
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          {/* TOP BAR: Tên bài thi, Đồng hồ, Nộp bài */}
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            {/* Left: Tên bài thi */}
+            <div className="text-sm md:text-lg font-bold text-indigo-700 ">
+              {examName} {isFullExam ? "(Full)" : "(Tùy chọn)"}
             </div>
-
-            {/* PART NAVIGATION (Chỉ hiển thị khi ở trạng thái Full) */}
-            <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-              {examinations.map((part, index) => {
-                const isCurrent = index === currentPartIndex;
-                const isSubmitted = partStates[part.id]?.submitted;
-                const canNavigate =
-                  isSubmitted || index <= currentPartIndex || isFullExam;
-
-                return (
-                  <button
-                    key={part.id}
-                    onClick={() => handleSwitchPart(index)}
-                    disabled={!canNavigate && index > currentPartIndex}
-                    className={`cursor-pointer flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap border ${
-                      isCurrent
-                        ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                        : isSubmitted
-                        ? "bg-green-100 text-green-700 border-green-400 hover:bg-green-200"
-                        : !canNavigate && index > currentPartIndex
-                        ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
-                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {part.name}
-                    {isSubmitted && <span className="ml-1">✓</span>}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Audio (Chỉ hiển thị khi ở trạng thái Full) */}
-            {currentPart?.audio ? (
-              <div className="mt-3">
-                <audio
-                  controls
-                  src={currentPart.audio}
-                  className="w-full rounded-md border border-gray-200"
-                />
+            {/* Right: counters + submit */}
+            <div className="flex items-center gap-4 md:gap-7">
+              <div
+                className={`text-sm font-medium whitespace-nowrap rounded-md p-2 shadow-inner ${
+                  timeRemaining <= 600 && maxTimeInSeconds > 0
+                    ? "bg-red-50 text-red-600"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                {maxTimeInSeconds > 0 ? "⏱ Còn lại: " : "⏳ Thời gian: "}
+                <strong className="tracking-wider">
+                  {formatTime(timeDisplay)}
+                </strong>
               </div>
-            ) : null}
-          </div>
-
-          {/* QUESTION NAVIGATION BAR (FULL STATE) - Đặt ở cuối Full Header */}
-          <div className="max-w-6xl mx-auto px-4 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-700">
-                Phần thi:
-                <span className="ml-1 font-semibold text-indigo-600">
-                  {currentPart?.name}
-                </span>
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-600">
-                Đã làm:
+              <div className="text-sm text-gray-600 whitespace-nowrap">
+                Hoàn thành:
                 <strong className="text-indigo-600">
                   {" "}
-                  {currentPartTotals.selected}{" "}
+                  {totalExamTotals.selected}{" "}
                 </strong>
-                /{" "}
+                /
                 <strong className="text-indigo-600">
-                  {currentPartTotals.total}
+                  {" "}
+                  {totalExamTotals.total}
                 </strong>
               </div>
-              <button
-                onClick={() => setShowQuestionList(!showQuestionList)}
-                className=" cursor-pointer flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition p-1 rounded-md"
-              >
-                {showQuestionList ? "Thu gọn" : "Mở rộng"} (
-                {allQuestionIdsInCurrentPart.length} câu hỏi)
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`h-4 w-4 transform transition-transform ${
-                    showQuestionList ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
+              {!submitted && !isPartTimeFinished ? (
+                <button
+                  onClick={handleSubmitPart}
+                  className={`cursor-pointer text-white font-semibold md:text-sm text-[10px] md:px-4 px-3 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
+                  NỘP BÀI
+                </button>
+              ) : (
+                <div className="text-sm text-green-600 font-bold whitespace-nowrap rounded-lg p-2 bg-green-50 shadow-inner">
+                  ✅ Đã nộp
+                </div>
+              )}
             </div>
           </div>
+
+          {/* PART NAVIGATION (Chỉ hiển thị khi ở trạng thái Full) */}
+          <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+            {examinations.map((part, index) => {
+              const isCurrent = index === currentPartIndex;
+              const isSubmitted = partStates[part.id]?.submitted;
+              const canNavigate =
+                isSubmitted || index <= currentPartIndex || isFullExam;
+
+              return (
+                <button
+                  key={part.id}
+                  onClick={() => handleSwitchPart(index)}
+                  disabled={!canNavigate && index > currentPartIndex}
+                  className={`cursor-pointer flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap border ${
+                    isCurrent
+                      ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                      : isSubmitted
+                      ? "bg-green-100 text-green-700 border-green-400 hover:bg-green-200"
+                      : !canNavigate && index > currentPartIndex
+                      ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
+                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  {part.name}
+                  {isSubmitted && <span className="ml-1">✓</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Audio (Chỉ hiển thị khi ở trạng thái Full) */}
+          {currentPart?.audio ? (
+            <div className="mt-3">
+              <audio
+                controls
+                src={currentPart.audio}
+                className="w-full rounded-md border border-gray-200"
+              />
+            </div>
+          ) : null}
         </div>
-      )}
+
+        {/* QUESTION NAVIGATION BAR (FULL STATE) - Đặt ở cuối Full Header */}
+        <div
+          className={` max-w-6xl mx-auto px-4 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between ${
+            isHeaderBottom && "hidden"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-700">
+              Phần thi:
+              <span className="ml-1 font-semibold text-indigo-600">
+                {currentPart?.name}
+              </span>
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-gray-600">
+              Đã làm:
+              <strong className="text-indigo-600">
+                {" "}
+                {currentPartTotals.selected}{" "}
+              </strong>
+              /{" "}
+              <strong className="text-indigo-600">
+                {currentPartTotals.total}
+              </strong>
+            </div>
+            <button
+              onClick={() => setShowQuestionList(!showQuestionList)}
+              className=" cursor-pointer flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition p-1 rounded-md"
+            >
+              {showQuestionList ? "Thu gọn" : "Mở rộng"} (
+              {allQuestionIdsInCurrentPart.length} câu hỏi)
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-4 w-4 transform transition-transform ${
+                  showQuestionList ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* ⭐️ HEADER 2: TRẠNG THÁI FIXED/COMPACT (KHI CUỘN XUỐNG) */}
       {isHeaderBottom && (
@@ -695,17 +703,16 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
             </div>
 
             {/* 2. CENTER BLOCK: AUDIO (Đã tách riêng để mở rộng tối đa không gian) */}
-            {currentPart?.audio && (
+            {/* {currentPart?.audio && (
               <div className="flex-1 mx-4 max-w-xl hidden lg:block">
                 {" "}
-                {/* flex-1 cho phép kéo dài, max-w-xl làm thanh audio dài ra */}
                 <audio
                   controls
                   src={currentPart.audio}
-                  className="w-full rounded-md h-10" /* w-full để chiếm hết không gian, h-10 (40px) để cố định chiều cao */
+                  className="w-full rounded-md h-10"
                 />
               </div>
-            )}
+            )} */}
 
             {/* 3. RIGHT BLOCK: Nút nộp bài + Nút Mở rộng (flex-shrink-0 để cố định) */}
             <div className="flex items-center gap-6 flex-shrink-0">
