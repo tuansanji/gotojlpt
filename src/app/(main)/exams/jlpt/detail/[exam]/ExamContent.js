@@ -33,9 +33,6 @@ function extractCorrectIndexFromScript(q) {
     if (!Number.isNaN(idx) && idx >= 0) return idx;
   }
 
-  const m2 = txt.match(/[①②③④⑤⑥⑦⑧⑨]/);
-  if (m2) return circledNums.indexOf(m2[0]);
-
   for (let i = 0; i < (q.answers || []).length; i++) {
     const ansText = textFromHtml(q.answers[i].name).replace(/\s+/g, " ").trim();
     if (!ansText) continue;
@@ -44,9 +41,9 @@ function extractCorrectIndexFromScript(q) {
   return null;
 }
 
-// --- COMPONENT CHUNG: Modal Wrapper (TÁCH RA NGOÀI ĐỂ TRÁNH RE-RENDER) ---
+// --- COMPONENT CHUNG: Modal Wrapper ---
 const ModalWrapper = ({ children, onClose }) => (
-  <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+  <div className="fixed inset-0 bg-white/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
     <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm transform transition-all scale-100 animate-in fade-in duration-300">
       <button
         onClick={onClose}
@@ -83,8 +80,9 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
   const [nextPartIndex, setNextPartIndex] = useState(null);
   const [isHeaderBottom, setIsHeaderBottom] = useState(false);
 
-  // STATE RIÊNG DÀNH CHO TIMER HIỂN THỊ
   const [currentPartElapsedTime, setCurrentPartElapsedTime] = useState(0);
+  // ⭐️ THÊM STATE ĐỂ QUẢN LÝ VIỆC HIỂN THỊ DANH SÁCH CÂU HỎI
+  const [showQuestionList, setShowQuestionList] = useState(false);
 
   const timerRef = useRef(null);
 
@@ -94,13 +92,11 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
   );
   const mondais = currentPart?.mondais || [];
 
-  // Tính toán maxTimeInSeconds
   const maxTimeInSeconds = useMemo(
     () => (currentPart?.total_time || 0) * 60,
     [currentPart?.total_time]
   );
 
-  // Lấy state hiện tại của phần thi
   const partStateMemo = useMemo(() => {
     return (
       partStates[currentPart?.id] || {
@@ -113,7 +109,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
 
   const { submitted, answers } = partStateMemo;
 
-  // Sử dụng thời gian đếm thực tế (currentPartElapsedTime) hoặc thời gian đã lưu
   const actualElapsedTime =
     submitted || maxTimeInSeconds === 0
       ? partStateMemo.elapsedTime
@@ -122,7 +117,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
   const isPartTimeFinished =
     maxTimeInSeconds > 0 && actualElapsedTime >= maxTimeInSeconds;
 
-  // Tính toán thời gian hiển thị
   const timeRemaining =
     maxTimeInSeconds > 0
       ? Math.max(0, maxTimeInSeconds - actualElapsedTime)
@@ -157,38 +151,31 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
     setCurrentPartIndex(0);
   }, [examinations]);
 
-  // --- 2. LOGIC THỜI GIAN ĐẾM (Đã sửa lỗi chỉ đếm 1s) ---
+  // --- 2. LOGIC THỜI GIAN ĐẾM ---
   useEffect(() => {
     const partId = currentPart?.id;
     const maxTime = maxTimeInSeconds;
     const isFinished = submitted || isPartTimeFinished;
 
-    // 1. DỌN DẸP TIMER CŨ (Rất quan trọng)
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
 
-    // 2. LOGIC KHÔNG CẦN CHẠY TIMER (Đã nộp, hết giờ, hoặc Modal đang mở)
     if (!partId || isFinished || showSubmitModal) {
-      // Đảm bảo elapsedTime hiển thị là giá trị đã lưu
       if (partStateMemo.elapsedTime !== currentPartElapsedTime) {
         setCurrentPartElapsedTime(partStateMemo.elapsedTime);
       }
       return;
     }
 
-    // 3. ĐỒNG BỘ THỜI GIAN KHI MỚI CHUYỂN PART
     if (partStateMemo.elapsedTime !== currentPartElapsedTime) {
       setCurrentPartElapsedTime(partStateMemo.elapsedTime);
-      // Khi state được set, useEffect sẽ chạy lại, sau đó sẽ tiến đến khởi tạo timer
       return;
     }
 
-    // 4. KHỞI TẠO TIMER MỚI
     if (!timerRef.current) {
       timerRef.current = setInterval(() => {
-        // CẬP NHẬT STATE HIỂN THỊ và STATE LƯU TRỮ CÙNG LÚC
         setCurrentPartElapsedTime((prevTime) => {
           const newTime = prevTime + 1;
 
@@ -197,14 +184,12 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
             [partId]: { ...prev[partId], elapsedTime: newTime },
           }));
 
-          // Xử lý hết giờ
           if (maxTime > 0 && newTime >= maxTime) {
             if (timerRef.current) {
               clearInterval(timerRef.current);
               timerRef.current = null;
             }
 
-            // Đảm bảo state cuối cùng là submitted: true
             setPartStates((prev) => ({
               ...prev,
               [partId]: {
@@ -227,7 +212,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
       }, 1000);
     }
 
-    // Cleanup: Dừng timer khi component unmount hoặc dependencies thay đổi
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -241,8 +225,8 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
     isPartTimeFinished,
     currentPartIndex,
     showSubmitModal,
-    currentPartElapsedTime, // Kích hoạt re-run sau khi đồng bộ
-    partStateMemo.elapsedTime, // Phát hiện Part chuyển
+    currentPartElapsedTime,
+    partStateMemo.elapsedTime,
   ]);
 
   // --- LOGIC UI (Sticky Header) (Giữ nguyên) ---
@@ -282,7 +266,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
   const handleSubmitPart = useCallback(() => {
     if (!currentPart?.id) return;
 
-    // Cập nhật cả state hiển thị và state lưu trữ
     const finalTime =
       maxTimeInSeconds > 0
         ? Math.max(actualElapsedTime, maxTimeInSeconds)
@@ -349,6 +332,17 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
     return ids;
   }, [mondais]);
 
+  // ⭐️ LẤY TẤT CẢ CÁC ID CÂU HỎI TRONG PHẦN HIỆN TẠI (ĐỂ DÙNG CHO NAVIGATION)
+  const allQuestionIdsInCurrentPart = useMemo(() => {
+    const ids = [];
+    currentPart?.mondais?.forEach((mondai) => {
+      mondai.question_groups?.forEach((group) => {
+        group.questions?.forEach((q) => ids.push(q.id));
+      });
+    });
+    return ids;
+  }, [currentPart]);
+
   const currentPartTotals = useMemo(() => {
     const total = currentPartQuestionIds.length;
     const selected = currentPartQuestionIds.filter(
@@ -398,7 +392,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
     return { total, selected, correct };
   }, [examinations, partStates, correctIndexMap]);
 
-  // LOGIC CHỌN ĐÁP ÁN (Giữ nguyên)
   const handleSelect = (qid, index) => {
     if (submitted || isPartTimeFinished) return;
     setPartStates((prev) => ({
@@ -410,7 +403,15 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
     }));
   };
 
-  // COMPONENT POPUP MODAL (SỬ DỤNG useCallBack ĐỂ ỔN ĐỊNH)
+  // ⭐️ HÀM SCROLL ĐẾN CÂU HỎI
+  const scrollToQuestion = useCallback((questionId) => {
+    const element = document.getElementById(`question-${questionId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setShowQuestionList(false); // Thu gọn danh sách sau khi click
+    }
+  }, []);
+
   const PartSubmitModal = useCallback(() => {
     const isNextPartAvailable =
       nextPartIndex !== null && nextPartIndex < examinations.length;
@@ -453,13 +454,14 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
           🎉 Hoàn thành Phần thi: {currentPart?.name}
         </h3>
         <p className="mb-6 text-gray-700">
-          Bạn đã trả lời đúng
+          Bạn đã trả lời đúng{" "}
           <strong className="text-indigo-600">
-            {" "}
             {currentPartTotals.correct}
           </strong>
           /
-          <strong className="text-indigo-600">{currentPartTotals.total}</strong>{" "}
+          <strong className="text-indigo-600">
+            {currentPartTotals.total}{" "}
+          </strong>
           câu.
         </p>
         <div className="flex justify-end gap-3">
@@ -501,25 +503,159 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
   // --- RENDER CHÍNH ---
   return (
     <div className="min-h-screen bg-[#f3fafb]">
-      {/* RENDER MODAL */}
       {showSubmitModal && <PartSubmitModal />}
-
       {/* HEADER */}
-      <div
-        className={`transition-all duration-300 ${
-          isHeaderBottom
-            ? "fixed bottom-0 left-0 right-0 bg-white border-t z-50 shadow-lg"
-            : "sticky top-0 bg-white border-b z-20 shadow-sm"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            {/* Left: Tên bài thi */}
-            <div className="text-lg font-bold text-indigo-700 whitespace-nowrap">
-              {examName} {isFullExam ? "(Full)" : "(Tùy chọn)"}
+      {!isHeaderBottom && (
+        <div className="sticky top-0 bg-white border-b z-20 shadow-sm transition-all duration-300">
+          <div className="max-w-6xl mx-auto px-4 py-3">
+            {/* TOP BAR: Tên bài thi, Đồng hồ, Nộp bài */}
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              {/* Left: Tên bài thi */}
+              <div className="text-lg font-bold text-indigo-700 whitespace-nowrap">
+                {examName} {isFullExam ? "(Full)" : "(Tùy chọn)"}
+              </div>
+              {/* Right: counters + submit */}
+              <div className="flex items-center gap-4">
+                <div
+                  className={`text-sm font-medium whitespace-nowrap rounded-md p-2 shadow-inner ${
+                    timeRemaining <= 600 && maxTimeInSeconds > 0
+                      ? "bg-red-50 text-red-600"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {maxTimeInSeconds > 0 ? "⏱ Còn lại: " : "⏳ Thời gian: "}
+                  <strong className="tracking-wider">
+                    {formatTime(timeDisplay)}
+                  </strong>
+                </div>
+                <div className="text-sm text-gray-600 whitespace-nowrap">
+                  Hoàn thành:
+                  <strong className="text-indigo-600">
+                    {totalExamTotals.selected}
+                  </strong>
+                  /
+                  <strong className="text-indigo-600">
+                    {totalExamTotals.total}
+                  </strong>
+                </div>
+                {!submitted && !isPartTimeFinished ? (
+                  <button
+                    onClick={handleSubmitPart}
+                    className={`text-white font-semibold text-sm px-4 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
+                  >
+                    NỘP BÀI
+                  </button>
+                ) : (
+                  <div className="text-sm text-green-600 font-bold whitespace-nowrap rounded-lg p-2 bg-green-50 shadow-inner">
+                    ✅ Đã nộp
+                  </div>
+                )}
+              </div>
             </div>
-            {/* Right: counters + submit */}
+
+            {/* PART NAVIGATION (Chỉ hiển thị khi ở trạng thái Full) */}
+            <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+              {examinations.map((part, index) => {
+                const isCurrent = index === currentPartIndex;
+                const isSubmitted = partStates[part.id]?.submitted;
+                const canNavigate =
+                  isSubmitted || index <= currentPartIndex || isFullExam;
+
+                return (
+                  <button
+                    key={part.id}
+                    onClick={() => handleSwitchPart(index)}
+                    disabled={!canNavigate && index > currentPartIndex}
+                    className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap border ${
+                      isCurrent
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                        : isSubmitted
+                        ? "bg-green-100 text-green-700 border-green-400 hover:bg-green-200"
+                        : !canNavigate && index > currentPartIndex
+                        ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
+                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    {part.name}
+                    {isSubmitted && <span className="ml-1">✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Audio (Chỉ hiển thị khi ở trạng thái Full) */}
+            {currentPart?.audio ? (
+              <div className="mt-3">
+                <audio
+                  controls
+                  src={currentPart.audio}
+                  className="w-full rounded-md border border-gray-200"
+                />
+              </div>
+            ) : null}
+          </div>
+
+          {/* QUESTION NAVIGATION BAR (FULL STATE) - Đặt ở cuối Full Header */}
+          <div className="max-w-6xl mx-auto px-4 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-gray-700">
+                Phần thi:
+                <span className="ml-1 font-semibold text-indigo-600">
+                  {currentPart?.name}
+                </span>
+              </span>
+            </div>
             <div className="flex items-center gap-4">
+              <div className="text-sm text-gray-600">
+                Đã làm:
+                <strong className="text-indigo-600">
+                  {currentPartTotals.selected}
+                </strong>
+                /
+                <strong className="text-indigo-600">
+                  {currentPartTotals.total}
+                </strong>
+              </div>
+              <button
+                onClick={() => setShowQuestionList(!showQuestionList)}
+                className="flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition p-1 rounded-md"
+              >
+                {showQuestionList ? "Thu gọn" : "Mở rộng"} (
+                {allQuestionIdsInCurrentPart.length} câu hỏi)
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-4 w-4 transform transition-transform ${
+                    showQuestionList ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ⭐️ HEADER 2: TRẠNG THÁI FIXED/COMPACT (KHI CUỘN XUỐNG) */}
+      {isHeaderBottom && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t z-50 shadow-lg transition-all duration-300">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            {/* Left: Tên bài thi + Đồng hồ + Tên phần thi & Hoàn thành */}
+            <div className="flex items-center gap-4">
+              {/* Tên Bài Thi Chính */}
+              <div className="text-base font-bold text-gray-800 whitespace-nowrap hidden sm:block">
+                {examName}
+              </div>
+
+              {/* Đồng hồ */}
               <div
                 className={`text-sm font-medium whitespace-nowrap rounded-md p-2 shadow-inner ${
                   timeRemaining <= 600 && maxTimeInSeconds > 0
@@ -532,75 +668,106 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                   {formatTime(timeDisplay)}
                 </strong>
               </div>
-              {/* Hiển thị tổng số câu đã làm trên toàn bài thi */}
-              <div className="text-sm text-gray-600 whitespace-nowrap">
-                Hoàn thành:
-                <strong className="text-indigo-600">
-                  {" "}
-                  {totalExamTotals.selected}
-                </strong>
-                /
-                <strong className="text-indigo-600">
-                  {totalExamTotals.total}
-                </strong>
+
+              {/* ⭐️ THÔNG TIN PHẦN THI HIỆN TẠI (Mới được thêm) */}
+              <div className="hidden md:flex flex-col text-xs text-gray-700">
+                <span className="font-semibold text-indigo-700">
+                  {currentPart?.name}
+                </span>
+                <span className="text-gray-500 mt-0.5">
+                  Hoàn thành:
+                  <strong className="text-indigo-600 ml-1">
+                    {currentPartTotals.selected}
+                  </strong>
+                  /
+                  <strong className="text-indigo-600">
+                    {currentPartTotals.total}
+                  </strong>
+                </span>
               </div>
-              {/* Nút nộp bài (chỉ nộp phần thi hiện tại) */}
+            </div>
+
+            {/* Right: Nút nộp bài + Nút Mở rộng */}
+            <div className="flex items-center gap-2">
               {!submitted && !isPartTimeFinished ? (
                 <button
                   onClick={handleSubmitPart}
-                  className={`ml-2 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow-lg bg-blue-600 hover:bg-blue-700 transition transform hover:scale-[1.02]`}
+                  className={`text-white font-semibold text-sm px-4 py-2 rounded-lg shadow-lg bg-teal-500 hover:bg-teal-600 transition`}
                 >
-                  Nộp bài ({currentPart?.name})
+                  NỘP BÀI
                 </button>
               ) : (
                 <div className="text-sm text-green-600 font-bold whitespace-nowrap rounded-lg p-2 bg-green-50 shadow-inner">
-                  ✅ Đã nộp ({currentPart?.name})
+                  ✅ Đã nộp
                 </div>
               )}
+
+              {/* Nút Mở rộng */}
+              <button
+                onClick={() => setShowQuestionList(!showQuestionList)}
+                className="flex items-center justify-center h-10 w-10 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full transition"
+                title={
+                  showQuestionList ? "Thu gọn danh sách" : "Mở rộng danh sách"
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-5 w-5 transform transition-transform ${
+                    showQuestionList ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
-          {/* NAVIGATION PARTS/EXAMINATIONS */}
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-            {examinations.map((part, index) => {
-              const isCurrent = index === currentPartIndex;
-              const isSubmitted = partStates[part.id]?.submitted;
-              // Cho phép chuyển nếu đã nộp, là phần hiện tại hoặc là Full Exam
-              const canNavigate =
-                isSubmitted || index <= currentPartIndex || isFullExam;
+        </div>
+      )}
+
+      {/* ⭐️ DANH SÁCH CÂU HỎI (HIỆN LÊN CHUNG CHO CẢ 2 TRẠNG THÁI HEADER) */}
+      {showQuestionList && (
+        <div
+          className={`fixed inset-x-0 bg-white border-t border-gray-100 z-40 shadow-xl transition-all duration-300 ${
+            isHeaderBottom ? "bottom-[76px]" : "top-[220px]"
+          }`}
+        >
+          <div className="max-w-6xl mx-auto px-4 py-3 grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-15 gap-2 overflow-y-auto max-h-[200px]">
+            {allQuestionIdsInCurrentPart.map((qid, index) => {
+              const isSelected = answers[qid] !== undefined;
+              const isSubmittedPart = submitted || isPartTimeFinished;
+              const isCorrect =
+                isSubmittedPart && answers[qid] === correctIndexMap[qid];
 
               return (
                 <button
-                  key={part.id}
-                  onClick={() => handleSwitchPart(index)}
-                  disabled={!canNavigate && index > currentPartIndex}
-                  className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium transition whitespace-nowrap border ${
-                    isCurrent
-                      ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                      : isSubmitted
-                      ? "bg-green-100 text-green-700 border-green-400 hover:bg-green-200"
-                      : !canNavigate && index > currentPartIndex
-                      ? "bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed"
-                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                  key={qid}
+                  onClick={() => scrollToQuestion(qid)}
+                  className={`flex items-center justify-center w-8 h-8 rounded-md text-sm font-medium transition ${
+                    isCorrect
+                      ? "bg-green-200 text-green-800"
+                      : isSubmittedPart && isSelected
+                      ? "bg-red-200 text-red-800"
+                      : isSelected
+                      ? "bg-indigo-200 text-indigo-800"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  {part.name}
-                  {isSubmitted && <span className="ml-1">✓</span>}
+                  {index + 1}
                 </button>
               );
             })}
           </div>
-          {/* Audio cho phần thi hiện tại */}
-          {currentPart?.audio ? (
-            <div className="mt-3">
-              <audio
-                controls
-                src={currentPart.audio}
-                className="w-full rounded-md border border-gray-200"
-              />
-            </div>
-          ) : null}
         </div>
-      </div>
+      )}
+      {/* Kết thúc HEADER */}
       {/* BODY: chỉ hiển thị mondais của currentPart */}
       <div className="max-w-6xl mx-auto p-6 space-y-6">
         <h2 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">
@@ -613,7 +780,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
             )
           </span>
         </h2>
-        {/* Nếu đã nộp bài, hiển thị kết quả chi tiết ở đầu phần */}
         {(submitted || isPartTimeFinished) && (
           <div className="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 mb-6 rounded-lg shadow-sm">
             <p className="font-bold">Đã hoàn thành phần thi này!</p>
@@ -648,8 +814,10 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                     selected !== correctIdx;
 
                   return (
+                    // ⭐️ THÊM ID CHO MỖI CÂU HỎI ĐỂ CÓ THỂ SCROLL ĐẾN
                     <div
                       key={q.id}
+                      id={`question-${q.id}`} // ⭐️ ID CẦN THIẾT CHO SCROLL
                       className={`rounded-lg border ${
                         isCorrect
                           ? "border-green-400 bg-green-50"
@@ -658,7 +826,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                           : "border-gray-200 bg-gray-50 hover:bg-gray-100 transition"
                       } p-4`}
                     >
-                      {/* PHẦN QUESTION */}
                       <div className="flex items-start gap-3 mb-3">
                         <div className="w-8 h-8 flex items-center justify-center bg-teal-500 text-white text-sm font-semibold rounded-full shrink-0">
                           {qIdx + 1}
@@ -712,7 +879,6 @@ export default function ExamContent({ examinations, examName, isFullExam }) {
                           );
                         })}
                       </div>
-                      {/* Hiển thị đáp án đúng + lời giải khi đã nộp hoặc hết giờ */}
                       {(submitted || isPartTimeFinished) && (
                         <div className="mt-3 text-sm text-gray-700 bg-white rounded-lg p-3 border border-gray-100 shadow-inner">
                           <div className="mb-2 font-semibold text-green-700">
